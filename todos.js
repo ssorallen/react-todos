@@ -270,18 +270,29 @@ var AppComponent = React.createClass({
     this.props.collection.fetch();
   },
 
-  // If "Enter" is pressed in the main input field, create a new **Todo**
-  // in *localStorage*.
-  handleKeyPress: function(event) {
-    if (13 !== event.keyCode) return;
-
-    var $input = $(event.target);
-    if (!$input.val()) return;
-
-    this.props.collection.create({title: $input.val()});
-    $input.val("");
+  // Start the app with a blank `<input>`.
+  getInitialState: function() {
+    return {
+      title: ""
+    };
   },
 
+  // Set the state of the title when the `<input>` is changed.
+  handleTitleChange: function(event) {
+    this.setState({title: event.target.value});
+  },
+
+  // If "Enter" is pressed in the main input field, create a new **Todo**
+  // in *localStorage*.
+  handleTitleKeyPress: function(event) {
+    if (13 !== event.keyCode) return;
+
+    var title = event.target.value;
+    if ("" === title) return;
+
+    this.props.collection.create({title: title});
+    this.setState({title: ""});
+  },
 
   toggleAllItemsCompleted: function(completed) {
     this.props.collection.each(function(todo) {
@@ -298,7 +309,9 @@ var AppComponent = React.createClass({
         <header>
           <h1>Todos</h1>
           <input placeholder="What needs to be done?" type="text"
-            onKeyPress={this.handleKeyPress} />
+            onChange={this.handleTitleChange}
+            onKeyPress={this.handleTitleKeyPress}
+            value={this.state.title} />
         </header>
         <MainComponent
           clearCompletedItems={this.clearCompletedItems}
