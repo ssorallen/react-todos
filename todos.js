@@ -177,9 +177,7 @@ var MainComponent = React.createClass({
 
 var AppComponent = React.createClass({
   clearCompletedItems: function() {
-    _.each(this.props.collection.done(), function(item) {
-      item.destroy();
-    });
+    _.invoke(this.props.collection.done(), "destroy");
   },
   componentWillMount: function() {
     this.props.collection.fetch();
