@@ -493,7 +493,7 @@ will be hidden.</p>
   },
 
   toggleDone: <span class="function"><span class="keyword">function</span><span class="params">(event)</span> {</span>
-    <span class="keyword">this</span>.props.model.set(<span class="string">"done"</span>, $(event.target).is(<span class="string">":checked"</span>));
+    <span class="keyword">this</span>.props.model.set(<span class="string">"done"</span>, event.target.checked);
   }
 
 });</pre></div></div>
@@ -769,26 +769,14 @@ var AppComponent = React.createClass({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
-              <p>If &quot;Enter&quot; is pressed in the main input field, create a new <strong>Todo</strong>
-in <em>localStorage</em>.</p>
+              <p>Start the app with a blank <code>&lt;input&gt;</code>.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  handleKeyPress: <span class="function"><span class="keyword">function</span><span class="params">(event)</span> {</span>
-    <span class="keyword">if</span> (<span class="number">13</span> !== event.keyCode) <span class="keyword">return</span>;
-
-    <span class="keyword">var</span> $input = $(event.target);
-    <span class="keyword">if</span> (!$input.val()) <span class="keyword">return</span>;
-
-    <span class="keyword">this</span>.props.collection.create({title: $input.val()});
-    $input.val(<span class="string">""</span>);
-  },
-
-
-  toggleAllItemsCompleted: <span class="function"><span class="keyword">function</span><span class="params">(completed)</span> {</span>
-    <span class="keyword">this</span>.props.collection.each(<span class="function"><span class="keyword">function</span><span class="params">(todo)</span> {</span>
-      todo.save({<span class="string">"done"</span>: completed});
-    });
+            <div class="content"><div class='highlight'><pre>  getInitialState: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    <span class="keyword">return</span> {
+      title: <span class="string">""</span>
+    };
   },</pre></div></div>
             
         </li>
@@ -799,6 +787,53 @@ in <em>localStorage</em>.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>Set the state of the title when the <code>&lt;input&gt;</code> is changed.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  handleTitleChange: <span class="function"><span class="keyword">function</span><span class="params">(event)</span> {</span>
+    <span class="keyword">this</span>.setState({title: event.target.value});
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p>If &quot;Enter&quot; is pressed in the main input field, create a new <strong>Todo</strong>
+in <em>localStorage</em>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  handleTitleKeyPress: <span class="function"><span class="keyword">function</span><span class="params">(event)</span> {</span>
+    <span class="keyword">if</span> (<span class="number">13</span> !== event.keyCode) <span class="keyword">return</span>;
+
+    <span class="keyword">var</span> title = event.target.value;
+    <span class="keyword">if</span> (<span class="string">""</span> === title) <span class="keyword">return</span>;
+
+    <span class="keyword">this</span>.props.collection.create({title: title});
+    <span class="keyword">this</span>.setState({title: <span class="string">""</span>});
+  },
+
+  toggleAllItemsCompleted: <span class="function"><span class="keyword">function</span><span class="params">(completed)</span> {</span>
+    <span class="keyword">this</span>.props.collection.each(<span class="function"><span class="keyword">function</span><span class="params">(todo)</span> {</span>
+      todo.save({<span class="string">"done"</span>: completed});
+    });
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p>Force updates whenever this <strong>App</strong>&#39;s collection receives events.</p>
 
@@ -812,7 +847,9 @@ in <em>localStorage</em>.</p>
         <span class="tag">&lt;<span class="title">header</span>&gt;</span>
           <span class="tag">&lt;<span class="title">h1</span>&gt;</span>Todos<span class="tag">&lt;/<span class="title">h1</span>&gt;</span>
           <span class="tag">&lt;<span class="title">input</span> <span class="attribute">placeholder</span>=<span class="value">"What needs to be done?"</span> <span class="attribute">type</span>=<span class="value">"text"</span>
-            <span class="attribute">onKeyPress</span>=<span class="value">{this.handleKeyPress}</span> /&gt;</span>
+            <span class="attribute">onChange</span>=<span class="value">{this.handleTitleChange}</span>
+            <span class="attribute">onKeyPress</span>=<span class="value">{this.handleTitleKeyPress}</span>
+            <span class="attribute">value</span>=<span class="value">{this.state.title}</span> /&gt;</span>
         <span class="tag">&lt;/<span class="title">header</span>&gt;</span>
         <span class="tag">&lt;<span class="title">MainComponent
 </span>          <span class="attribute">clearCompletedItems</span>=<span class="value">{this.clearCompletedItems}</span>
@@ -828,11 +865,11 @@ in <em>localStorage</em>.</p>
         </li>
         
         
-        <li id="section-43">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p>Create a new Todo collection and render the <strong>App</strong> into <code>#todoapp</code>.</p>
 
