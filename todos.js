@@ -138,7 +138,12 @@ var MainComponent = React.createClass({
 
 var AppComponent = React.createClass({
   clearCompletedItems: function() {
-    this.props.collection.remove(this.props.collection.done());
+    _.each(this.props.collection.done(), function(item) {
+      item.destroy();
+    });
+  },
+  componentWillMount: function() {
+    this.props.collection.fetch();
   },
   handleKeyPress: function(event) {
     if (13 !== event.keyCode) return;
