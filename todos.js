@@ -1,15 +1,22 @@
 /** @jsx React.DOM */
 
+// JSX Annotation
+// --------------
+
+// The `@jsx React.DOM` annotation above tells the JSXTransformer to compile
+// this file as JSX. It has to be the first line in the file, which is why
+// the description you're reading is below the annotation.
+
 // Todo Model
 // ----------
 
 // Our basic **Todo** model has `title` and `done` attributes.
 var Todo = Backbone.Model.extend({
 
-  // Default attributes for the todo item.
+  // Default attributes for the Todo item.
   defaults: function() {
     return {
-      title: "empty todo...",
+      title: "",
       done: false
     };
   }
@@ -19,15 +26,15 @@ var Todo = Backbone.Model.extend({
 // Todo Collection
 // ---------------
 
-// The collection of todos is backed by *localStorage* instead of a remote
+// The collection of Todos is backed by *localStorage* instead of a remote
 // server.
 var TodoList = Backbone.Collection.extend({
 
   // Reference to this collection's model.
   model: Todo,
 
-  // Save all of the todo items under the `"todos-backbone"` namespace.
-  localStorage: new Backbone.LocalStorage("todos-backbone"),
+  // Save all of the todo items under the `"todos-react"` namespace.
+  localStorage: new Backbone.LocalStorage("todos-react"),
 
   // Filter down the list of all todo items that are finished.
   done: function() {
@@ -41,44 +48,75 @@ var TodoList = Backbone.Collection.extend({
 
 });
 
+// Backbone/React Integration
+// --------------------------
+
+// Notifies React components when their Backbone models or collections change.
 var BackboneMixin = {
+
+  // Listen to all events on this component's collection or model and force an
+  // update when they fire. Let React decide whether the DOM should change.
   componentDidMount: function() {
     this._boundForceUpdate = this.forceUpdate.bind(this, null);
     this.getBackboneObject().on("all", this._boundForceUpdate, this);
   },
+
+  // Clean up the listener when the component will be removed.
   componentWillUnmount: function() {
     this.getBackboneObject().off("all", this._boundForceUpdate);
   },
+
+  // The property `collection` or `model` is assumed to be a
+  // `Backbone.Collection` or a `Backbone.Model`.
   getBackboneObject: function() {
     return this.props.collection || this.props.model;
   }
+
 };
 
+// Todo List Item Component
+// ------------------------
+
+// The DOM for a todo item...
 var TodoListItemComponent = React.createClass({
+
+  // If the component updates and is in edit mode, send focus to the `<input>`.
   componentDidUpdate: function() {
     if (this.state.editing) {
       this.refs.editInput.getDOMNode().focus();
     }
   },
+
+  // Destroying the model fires a `remove` event on the model's collection,
+  // which forces an update and removes this **TodoListItemComponent** from the
+  // DOM. We don't have to do any other cleanup!
   destroy: function() {
     this.props.model.destroy();
   },
+
+  // List items are initially not in edit mode.
   getInitialState: function() {
     return {
       editing: false
     };
   },
+
+  // Stop editing if the input gets an "Enter" keypress.
   handleEditKeyPress: function(event) {
     if (13 === event.keyCode) {
       this.stopEditing();
     }
   },
+
   render: function() {
     var inputStyles = {};
     var viewStyles = {};
 
+    // Hide the `.view` when editing
     if (this.state.editing) {
       viewStyles.display = "none";
+
+    // ... and hide the `<input>` when not editing
     } else {
       inputStyles.display = "none";
     }
@@ -101,48 +139,71 @@ var TodoListItemComponent = React.createClass({
       </li>
     );
   },
+
+  // Set the title of this item's model when the value of the `<input>` changes.
   setTitle: function(event) {
     this.props.model.set("title", event.target.value);
   },
+
+  // Enter edit mode. Changing the state triggers this component to be
+  // re-rendered, and on the next pass the `<input>` will be shown and `.view`
+  // will be hidden.
   startEditing: function() {
     this.setState({editing: true});
   },
+
+  // Exit edit mode, trigger a render.
   stopEditing: function() {
     this.setState({editing: false});
   },
+
   toggleDone: function(event) {
     this.props.model.set("done", $(event.target).is(":checked"));
   }
+
 });
 
-var TodoListComponent = React.createClass({
-  render: function() {
-    var todoListItems = this.props.collection.map(function(model) {
-      return <TodoListItemComponent key={model.id} model={model} />
-    });
+// Todo List Component
+// -------------------
 
+// Renders a list of todos.
+var TodoListComponent = React.createClass({
+
+  // Pass the `key` attribute[1] a unique ID so React can track the elements
+  // properly.
+  //
+  // [1] http://facebook.github.io/react/docs/multiple-components.html#dynamic-children
+  render: function() {
     return (
       <ul id="todo-list">
-        {todoListItems}
+        {this.props.collection.map(function(model) {
+          return <TodoListItemComponent key={model.id} model={model} />
+        })}
       </ul>
     );
   }
+
 });
 
-var FooterComponent = React.createClass({
-  render: function() {
-    var footerStyles = {};
-    if (0 === this.props.itemsDoneCount && 0 === this.props.itemsRemainingCount) {
-      footerStyles.display = "none";
-    }
+// Footer Component
+// ----------------
 
+// The footer shows the total number of todos and how many are completed.
+var FooterComponent = React.createClass({
+
+  render: function() {
     var clearCompletedStyles = {};
+
+    // Hide the "Clear X completed items" button if there are no completed
+    // items.
     if (0 === this.props.itemsDoneCount) {
       clearCompletedStyles.display = "none";
     }
 
+    // Clicking the "Clear X completed items" button calls the
+    // "clearCompletedItems" function passed in on `props`.
     return (
-      <footer style={footerStyles}>
+      <footer style={this.props.style}>
         <a id="clear-completed" style={clearCompletedStyles}
             onClick={this.props.clearCompletedItems}>
           Clear {this.props.itemsDoneCount} completed
@@ -155,43 +216,63 @@ var FooterComponent = React.createClass({
       </footer>
     );
   }
+
 });
 
+// Main Component
+// --------------
+
+// The main component contains the list of todos and the footer.
 var MainComponent = React.createClass({
+
+  // Tell the **App** to toggle the *done* state of all **Todo** items.
   toggleAllItemsCompleted: function(event) {
     this.props.toggleAllItemsCompleted(event.target.checked);
   },
+
   render: function() {
-    var toggleAllStyles = {};
+    var childComponentStyles = {};
+
+    // Hide the "Mark all as complete" button and the footer if there are no
+    // **Todo** items.
     if (0 === this.props.collection.length) {
-      toggleAllStyles.display = "none";
+      childComponentStyles.display = "none";
     }
 
     return (
       <section id="main">
-        <input id="toggle-all" type="checkbox" style={toggleAllStyles}
+        <input id="toggle-all" type="checkbox" style={childComponentStyles}
           checked={0 === this.props.collection.remaining().length}
           onChange={this.toggleAllItemsCompleted} />
-        <label htmlFor="toggle-all" style={toggleAllStyles}>
+        <label htmlFor="toggle-all" style={childComponentStyles}>
           Mark all as complete
         </label>
         <TodoListComponent collection={this.props.collection} />
         <FooterComponent
           clearCompletedItems={this.props.clearCompletedItems}
           itemsRemainingCount={this.props.collection.remaining().length}
-          itemsDoneCount={this.props.collection.done().length} />
+          itemsDoneCount={this.props.collection.done().length}
+          style={childComponentStyles} />
       </section>
     );
   }
+
 });
 
 var AppComponent = React.createClass({
+
+  // Clear all done todo items, destroying their models.
   clearCompletedItems: function() {
     _.invoke(this.props.collection.done(), "destroy");
   },
+
+  // Fetch Todos before the App is rendered to the DOM.
   componentWillMount: function() {
     this.props.collection.fetch();
   },
+
+  // If "Enter" is pressed in the main input field, create a new **Todo**
+  // in *localStorage*.
   handleKeyPress: function(event) {
     if (13 !== event.keyCode) return;
 
@@ -201,12 +282,17 @@ var AppComponent = React.createClass({
     this.props.collection.create({title: $input.val()});
     $input.val("");
   },
+
+
   toggleAllItemsCompleted: function(completed) {
     this.props.collection.each(function(todo) {
       todo.save({"done": completed});
     });
   },
+
+  // Force updates whenever this **App**'s collection receives events.
   mixins: [BackboneMixin],
+
   render: function() {
     return (
       <div>
@@ -224,6 +310,7 @@ var AppComponent = React.createClass({
   }
 })
 
+// Create a new Todo collection and render the **App** into `#todoapp`.
 React.renderComponent(
   <AppComponent collection={new TodoList()} />,
   document.getElementById("todoapp")
