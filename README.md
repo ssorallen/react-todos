@@ -13,3 +13,7 @@ The demo uses local storage to save todos in the browser.
 http://ssorallen.com/reacttodos/docs/
 
 The documentation is created using [Docco](http://jashkenas.github.io/docco/).
+
+### Favicon
+
+The great little todo list favicon comes from [Typicons](http://typicons.com/).
