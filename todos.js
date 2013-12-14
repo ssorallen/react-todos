@@ -52,7 +52,8 @@ var TodoListItemComponent = React.createClass({
     return (
       <li className={this.props.model.get("done") ? "done" : ""}>
         <div className="view">
-          <input className="toggle" type="checkbox" onChange={this.toggleDone} />
+          <input className="toggle" type="checkbox"
+            checked={this.props.model.get("done")} onChange={this.toggleDone} />
           <label>{this.props.model.get("title")}</label>
           <a className="destroy" onClick={this.destroy}></a>
         </div>
@@ -108,6 +109,9 @@ var FooterComponent = React.createClass({
 });
 
 var MainComponent = React.createClass({
+  markAllItemsCompleted: function(event) {
+    this.props.markAllItemsCompleted();
+  },
   render: function() {
     var toggleAllStyles = {};
     if (0 === this.props.collection.length) {
@@ -116,7 +120,9 @@ var MainComponent = React.createClass({
 
     return (
       <section id="main">
-        <input id="toggle-all" type="checkbox" style={toggleAllStyles} />
+        <input id="toggle-all" type="checkbox" style={toggleAllStyles}
+          checked={this.props.collection.remaining().length === 0}
+          onChange={this.markAllItemsCompleted} />
         <label htmlFor="toggle-all" style={toggleAllStyles}>
           Mark all as complete
         </label>
@@ -143,6 +149,19 @@ var AppComponent = React.createClass({
     this.props.collection.create({title: $input.val()});
     $input.val("");
   },
+  markAllItemsCompleted: function() {
+    var remainingItems = this.props.collection.remaining();
+
+    if (remainingItems.length > 0) {
+      _.each(remainingItems, function(item) {
+        item.set("done", true);
+      });
+    } else {
+      _.each(this.props.collection.done(), function(item) {
+        item.set("done", false);
+      });
+    }
+  },
   mixins: [BackboneMixin],
   render: function() {
     return (
@@ -154,7 +173,8 @@ var AppComponent = React.createClass({
         </header>
         <MainComponent
           clearCompletedItems={this.clearCompletedItems}
-          collection={this.props.collection} />
+          collection={this.props.collection}
+          markAllItemsCompleted={this.markAllItemsCompleted} />
       </div>
     );
   }
