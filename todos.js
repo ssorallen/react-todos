@@ -203,7 +203,7 @@ var FooterComponent = React.createClass({
     // Clicking the "Clear X completed items" button calls the
     // "clearCompletedItems" function passed in on `props`.
     return (
-      <footer style={this.props.style}>
+      <footer>
         <a id="clear-completed" style={clearCompletedStyles}
             onClick={this.props.clearCompletedItems}>
           Clear {this.props.itemsDoneCount} completed
@@ -231,28 +231,27 @@ var MainComponent = React.createClass({
   },
 
   render: function() {
-    var childComponentStyles = {};
+    var style = {};
 
     // Hide the "Mark all as complete" button and the footer if there are no
     // **Todo** items.
     if (0 === this.props.collection.length) {
-      childComponentStyles.display = "none";
+      style.display = "none";
     }
 
     return (
-      <section id="main">
-        <input id="toggle-all" type="checkbox" style={childComponentStyles}
+      <section id="main" style={style}>
+        <input id="toggle-all" type="checkbox"
           checked={0 === this.props.collection.remaining().length}
           onChange={this.toggleAllItemsCompleted} />
-        <label htmlFor="toggle-all" style={childComponentStyles}>
+        <label htmlFor="toggle-all">
           Mark all as complete
         </label>
         <TodoListComponent collection={this.props.collection} />
         <FooterComponent
           clearCompletedItems={this.props.clearCompletedItems}
           itemsRemainingCount={this.props.collection.remaining().length}
-          itemsDoneCount={this.props.collection.done().length}
-          style={childComponentStyles} />
+          itemsDoneCount={this.props.collection.done().length} />
       </section>
     );
   }
