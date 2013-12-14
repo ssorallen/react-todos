@@ -45,25 +45,60 @@ var BackboneMixin = {
 };
 
 var TodoListItemComponent = React.createClass({
+  componentDidUpdate: function() {
+    if (this.state.editing) {
+      this.refs.editInput.getDOMNode().focus();
+    }
+  },
   destroy: function() {
     this.props.model.destroy();
   },
+  getInitialState: function() {
+    return {
+      editing: false
+    };
+  },
+  handleEditKeyPress: function(event) {
+    if (13 === event.keyCode) {
+      this.stopEditing();
+    }
+  },
   render: function() {
-    var inputId = "todo-list-item-" + this.props.model.id;
+    var inputStyles = {};
+    var viewStyles = {};
+
+    if (this.state.editing) {
+      viewStyles.display = "none";
+    } else {
+      inputStyles.display = "none";
+    }
 
     return (
       <li className={this.props.model.get("done") ? "done" : ""}>
-        <div className="view">
+        <div className="view" onDoubleClick={this.startEditing} style={viewStyles}>
           <input className="toggle" type="checkbox"
             checked={this.props.model.get("done")}
-            id={inputId}
             onChange={this.toggleDone} />
-          <label htmlFor={inputId}>{this.props.model.get("title")}</label>
+          <label>{this.props.model.get("title")}</label>
           <a className="destroy" onClick={this.destroy}></a>
         </div>
-        <input className="edit" type="text" />
+        <input className="edit" ref="editInput" type="text"
+          onBlur={this.stopEditing}
+          onChange={this.setTitle}
+          onKeyPress={this.handleEditKeyPress}
+          style={inputStyles}
+          value={this.props.model.get("title")} />
       </li>
     );
+  },
+  setTitle: function(event) {
+    this.props.model.set("title", event.target.value);
+  },
+  startEditing: function() {
+    this.setState({editing: true});
+  },
+  stopEditing: function() {
+    this.setState({editing: false});
   },
   toggleDone: function(event) {
     this.props.model.set("done", $(event.target).is(":checked"));

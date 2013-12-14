@@ -108,23 +108,8 @@ body {
   margin-bottom: -1px;
 }
 
-#todo-list li.editing .edit {
-  display: block;
-  width: 444px;
-  padding: 13px 15px 14px 20px;
-  margin: 0;
-}
-
-#todo-list li.editing .view {
-  display: none;
-}
-
 #todo-list li .view label {
   word-break: break-word;
-}
-
-#todo-list li .edit {
-  display: none;
 }
 
 #todoapp footer {
