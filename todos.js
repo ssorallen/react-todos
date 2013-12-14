@@ -1,35 +1,45 @@
 /** @jsx React.DOM */
 
+// Todo Model
+// ----------
+
+// Our basic **Todo** model has `title` and `done` attributes.
 var Todo = Backbone.Model.extend({
+
+  // Default attributes for the todo item.
   defaults: function() {
     return {
       title: "empty todo...",
-      order: Todos.nextOrder(),
       done: false
     };
-  },
-  toggle: function() {
-    this.save({done: !this.get("done")});
   }
+
 });
 
+// Todo Collection
+// ---------------
+
+// The collection of todos is backed by *localStorage* instead of a remote
+// server.
 var TodoList = Backbone.Collection.extend({
-  localStorage: new Backbone.LocalStorage("todos-backbone"),
+
+  // Reference to this collection's model.
   model: Todo,
+
+  // Save all of the todo items under the `"todos-backbone"` namespace.
+  localStorage: new Backbone.LocalStorage("todos-backbone"),
+
+  // Filter down the list of all todo items that are finished.
   done: function() {
     return this.where({done: true});
   },
+
+  // Filter down the list to only todo items that are still not finished.
   remaining: function() {
     return this.where({done: false});
-  },
-  nextOrder: function() {
-    if (!this.length) return 1;
-    return this.last().get('order') + 1;
-  },
-  comparator: 'order'
-});
+  }
 
-var Todos = new TodoList();
+});
 
 var BackboneMixin = {
   componentDidMount: function() {
@@ -153,14 +163,14 @@ var MainComponent = React.createClass({
   },
   render: function() {
     var toggleAllStyles = {};
-    if (this.props.itemsEmpty) {
+    if (0 === this.props.collection.length) {
       toggleAllStyles.display = "none";
     }
 
     return (
       <section id="main">
         <input id="toggle-all" type="checkbox" style={toggleAllStyles}
-          checked={this.props.allItemsCompleted}
+          checked={0 === this.props.collection.remaining().length}
           onChange={this.toggleAllItemsCompleted} />
         <label htmlFor="toggle-all" style={toggleAllStyles}>
           Mark all as complete
@@ -192,7 +202,7 @@ var AppComponent = React.createClass({
     $input.val("");
   },
   toggleAllItemsCompleted: function(completed) {
-    Todos.each(function(todo) {
+    this.props.collection.each(function(todo) {
       todo.save({"done": completed});
     });
   },
@@ -206,10 +216,8 @@ var AppComponent = React.createClass({
             onKeyPress={this.handleKeyPress} />
         </header>
         <MainComponent
-          allItemsCompleted={this.props.collection.remaining().length === 0}
           clearCompletedItems={this.clearCompletedItems}
           collection={this.props.collection}
-          itemsEmpty={this.props.collection.length === 0}
           toggleAllItemsCompleted={this.toggleAllItemsCompleted} />
       </div>
     );
@@ -217,6 +225,6 @@ var AppComponent = React.createClass({
 })
 
 React.renderComponent(
-  <AppComponent collection={Todos} />,
+  <AppComponent collection={new TodoList()} />,
   document.getElementById("todoapp")
 );
