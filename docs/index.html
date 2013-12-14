@@ -619,7 +619,7 @@ items.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="keyword">return</span> (
-      <span class="xml"><span class="tag">&lt;<span class="title">footer</span> <span class="attribute">style</span>=<span class="value">{this.props.style}</span>&gt;</span>
+      <span class="xml"><span class="tag">&lt;<span class="title">footer</span>&gt;</span>
         <span class="tag">&lt;<span class="title">a</span> <span class="attribute">id</span>=<span class="value">"clear-completed"</span> <span class="attribute">style</span>=<span class="value">{clearCompletedStyles}</span>
             <span class="attribute">onClick</span>=<span class="value">{this.props.clearCompletedItems}</span>&gt;</span>
           Clear {this.props.itemsDoneCount} completed
@@ -683,7 +683,7 @@ items.</p>
   },
 
   render: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
-    <span class="keyword">var</span> childComponentStyles = {};</pre></div></div>
+    <span class="keyword">var</span> style = {};</pre></div></div>
             
         </li>
         
@@ -700,23 +700,22 @@ items.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> (<span class="number">0</span> === <span class="keyword">this</span>.props.collection.length) {
-      childComponentStyles.display = <span class="string">"none"</span>;
+      style.display = <span class="string">"none"</span>;
     }
 
     <span class="keyword">return</span> (
-      <span class="xml"><span class="tag">&lt;<span class="title">section</span> <span class="attribute">id</span>=<span class="value">"main"</span>&gt;</span>
-        <span class="tag">&lt;<span class="title">input</span> <span class="attribute">id</span>=<span class="value">"toggle-all"</span> <span class="attribute">type</span>=<span class="value">"checkbox"</span> <span class="attribute">style</span>=<span class="value">{childComponentStyles}</span>
+      <span class="xml"><span class="tag">&lt;<span class="title">section</span> <span class="attribute">id</span>=<span class="value">"main"</span> <span class="attribute">style</span>=<span class="value">{style}</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">input</span> <span class="attribute">id</span>=<span class="value">"toggle-all"</span> <span class="attribute">type</span>=<span class="value">"checkbox"</span>
           <span class="attribute">checked</span>=<span class="value">{0</span> =<span class="value">==</span> <span class="attribute">this.props.collection.remaining</span>()<span class="attribute">.length</span>}
           <span class="attribute">onChange</span>=<span class="value">{this.toggleAllItemsCompleted}</span> /&gt;</span>
-        <span class="tag">&lt;<span class="title">label</span> <span class="attribute">htmlFor</span>=<span class="value">"toggle-all"</span> <span class="attribute">style</span>=<span class="value">{childComponentStyles}</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">label</span> <span class="attribute">htmlFor</span>=<span class="value">"toggle-all"</span>&gt;</span>
           Mark all as complete
         <span class="tag">&lt;/<span class="title">label</span>&gt;</span>
         <span class="tag">&lt;<span class="title">TodoListComponent</span> <span class="attribute">collection</span>=<span class="value">{this.props.collection}</span> /&gt;</span>
         <span class="tag">&lt;<span class="title">FooterComponent
 </span>          <span class="attribute">clearCompletedItems</span>=<span class="value">{this.props.clearCompletedItems}</span>
           <span class="attribute">itemsRemainingCount</span>=<span class="value">{this.props.collection.remaining().length}</span>
-          <span class="attribute">itemsDoneCount</span>=<span class="value">{this.props.collection.done().length}</span>
-          <span class="attribute">style</span>=<span class="value">{childComponentStyles}</span> /&gt;</span>
+          <span class="attribute">itemsDoneCount</span>=<span class="value">{this.props.collection.done().length}</span> /&gt;</span>
       <span class="tag">&lt;/<span class="title">section</span>&gt;</span>
     );
   }
