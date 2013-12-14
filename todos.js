@@ -158,7 +158,7 @@ var TodoListItemComponent = React.createClass({
   },
 
   toggleDone: function(event) {
-    this.props.model.set("done", $(event.target).is(":checked"));
+    this.props.model.set("done", event.target.checked);
   }
 
 });
