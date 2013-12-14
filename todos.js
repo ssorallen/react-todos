@@ -49,12 +49,16 @@ var TodoListItemComponent = React.createClass({
     this.props.model.destroy();
   },
   render: function() {
+    var inputId = "todo-list-item-" + this.props.model.id;
+
     return (
       <li className={this.props.model.get("done") ? "done" : ""}>
         <div className="view">
           <input className="toggle" type="checkbox"
-            checked={this.props.model.get("done")} onChange={this.toggleDone} />
-          <label>{this.props.model.get("title")}</label>
+            checked={this.props.model.get("done")}
+            id={inputId}
+            onChange={this.toggleDone} />
+          <label htmlFor={inputId}>{this.props.model.get("title")}</label>
           <a className="destroy" onClick={this.destroy}></a>
         </div>
         <input className="edit" type="text" />
@@ -109,20 +113,20 @@ var FooterComponent = React.createClass({
 });
 
 var MainComponent = React.createClass({
-  markAllItemsCompleted: function(event) {
-    this.props.markAllItemsCompleted();
+  toggleAllItemsCompleted: function(event) {
+    this.props.toggleAllItemsCompleted(event.target.checked);
   },
   render: function() {
     var toggleAllStyles = {};
-    if (0 === this.props.collection.length) {
+    if (this.props.itemsEmpty) {
       toggleAllStyles.display = "none";
     }
 
     return (
       <section id="main">
         <input id="toggle-all" type="checkbox" style={toggleAllStyles}
-          checked={this.props.collection.remaining().length === 0}
-          onChange={this.markAllItemsCompleted} />
+          checked={this.props.allItemsCompleted}
+          onChange={this.toggleAllItemsCompleted} />
         <label htmlFor="toggle-all" style={toggleAllStyles}>
           Mark all as complete
         </label>
@@ -154,18 +158,10 @@ var AppComponent = React.createClass({
     this.props.collection.create({title: $input.val()});
     $input.val("");
   },
-  markAllItemsCompleted: function() {
-    var remainingItems = this.props.collection.remaining();
-
-    if (remainingItems.length > 0) {
-      _.each(remainingItems, function(item) {
-        item.set("done", true);
-      });
-    } else {
-      _.each(this.props.collection.done(), function(item) {
-        item.set("done", false);
-      });
-    }
+  toggleAllItemsCompleted: function(completed) {
+    Todos.each(function(todo) {
+      todo.save({"done": completed});
+    });
   },
   mixins: [BackboneMixin],
   render: function() {
@@ -177,9 +173,11 @@ var AppComponent = React.createClass({
             onKeyPress={this.handleKeyPress} />
         </header>
         <MainComponent
+          allItemsCompleted={this.props.collection.remaining().length === 0}
           clearCompletedItems={this.clearCompletedItems}
           collection={this.props.collection}
-          markAllItemsCompleted={this.markAllItemsCompleted} />
+          itemsEmpty={this.props.collection.length === 0}
+          toggleAllItemsCompleted={this.toggleAllItemsCompleted} />
       </div>
     );
   }
