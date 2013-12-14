@@ -114,7 +114,9 @@ _.extend(Backbone.LocalStorage.prototype, {
 Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(method, model, options) {
   var store = model.localStorage || model.collection.localStorage;
 
-  var resp, errorMessage, syncDfd = $.Deferred && $.Deferred(); //If $ is having Deferred - use it. 
+  var resp, errorMessage,
+    // If $ and $ is having Deferred - use it. 
+    syncDfd = window.$ && $.Deferred && $.Deferred();
 
   try {
 
