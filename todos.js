@@ -51,25 +51,21 @@ var TodoList = Backbone.Collection.extend({
 // Backbone/React Integration
 // --------------------------
 
-// Notifies React components when their Backbone models or collections change.
+// Updates React components when their Backbone resources change. Expects the
+// component to implement a method called `getResource` that returns an object
+// that extends `Backbone.Events`.
 var BackboneMixin = {
 
   // Listen to all events on this component's collection or model and force an
   // update when they fire. Let React decide whether the DOM should change.
   componentDidMount: function() {
     this._boundForceUpdate = this.forceUpdate.bind(this, null);
-    this.getBackboneObject().on("all", this._boundForceUpdate, this);
+    this.getResource().on("all", this._boundForceUpdate, this);
   },
 
   // Clean up the listener when the component will be removed.
   componentWillUnmount: function() {
-    this.getBackboneObject().off("all", this._boundForceUpdate);
-  },
-
-  // The property `collection` or `model` is assumed to be a
-  // `Backbone.Collection` or a `Backbone.Model`.
-  getBackboneObject: function() {
-    return this.props.collection || this.props.model;
+    this.getResource().off("all", this._boundForceUpdate);
   }
 
 };
@@ -275,6 +271,12 @@ var AppComponent = React.createClass({
     return {
       title: ""
     };
+  },
+
+  // Used by the **BackboneMixin** to watch for changes on this component's
+  // resource.
+  getResource: function() {
+    return this.props.collection;
   },
 
   // Set the state of the title when the `<input>` is changed.
