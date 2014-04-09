@@ -77,8 +77,8 @@ var BackboneMixin = {
 var TodoListItemComponent = React.createClass({
 
   // If the component updates and is in edit mode, send focus to the `<input>`.
-  componentDidUpdate: function() {
-    if (this.state.editing) {
+  componentDidUpdate: function(prevProps) {
+    if (this.props.editing && !prevProps.editing) {
       this.refs.editInput.getDOMNode().focus();
     }
   },
@@ -88,13 +88,6 @@ var TodoListItemComponent = React.createClass({
   // DOM. We don't have to do any other cleanup!
   destroy: function() {
     this.props.model.destroy();
-  },
-
-  // List items are initially not in edit mode.
-  getInitialState: function() {
-    return {
-      editing: false
-    };
   },
 
   // Stop editing if the input gets an "Enter" keypress.
@@ -109,7 +102,7 @@ var TodoListItemComponent = React.createClass({
     var viewStyles = {};
 
     // Hide the `.view` when editing
-    if (this.state.editing) {
+    if (this.props.editing) {
       viewStyles.display = "none";
 
     // ... and hide the `<input>` when not editing
@@ -141,16 +134,14 @@ var TodoListItemComponent = React.createClass({
     this.props.model.set("title", event.target.value);
   },
 
-  // Enter edit mode. Changing the state triggers this component to be
-  // re-rendered, and on the next pass the `<input>` will be shown and `.view`
-  // will be hidden.
+  // Tell the parent component this list item is entering edit mode.
   startEditing: function() {
-    this.setState({editing: true});
+    this.props.onStartEditing(this.props.model.id);
   },
 
-  // Exit edit mode, trigger a render.
+  // Exit edit mode.
   stopEditing: function() {
-    this.setState({editing: false});
+    this.props.onStopEditing(this.props.model.id);
   },
 
   toggleDone: function(event) {
@@ -165,16 +156,43 @@ var TodoListItemComponent = React.createClass({
 // Renders a list of todos.
 var TodoListComponent = React.createClass({
 
-  // Pass the `key` attribute[1] a unique ID so React can track the elements
-  // properly.
-  //
-  // [1] http://facebook.github.io/react/docs/multiple-components.html#dynamic-children
+  // Start with no list item in edit mode.
+  getInitialState: function() {
+    return {
+      editingModelId: null
+    };
+  },
+
+  // When a `TodoListItemComponent` starts editing, it passes its model's ID to
+  // this callback. Setting the state triggers this component to re-render and
+  // render that `TodoListItemComponent` in edit mode.
+  setEditingModelId: function(modelId) {
+    this.setState({editingModelId: modelId});
+  },
+
+  unsetEditingModelId: function(modelId) {
+    if (modelId === this.state.editingModelId) {
+      this.setState({editingModelId: null});
+    }
+  },
+
   render: function() {
     return (
       <ul id="todo-list">
         {this.props.collection.map(function(model) {
-          return <TodoListItemComponent key={model.id} model={model} />
-        })}
+          // Pass the `key` attribute[1] a unique ID so React can track the
+          // elements properly.
+          //
+          // [1] http://facebook.github.io/react/docs/multiple-components.html#dynamic-children
+          return (
+            <TodoListItemComponent
+              editing={this.state.editingModelId === model.id}
+              key={model.id}
+              model={model}
+              onStartEditing={this.setEditingModelId}
+              onStopEditing={this.unsetEditingModelId} />
+          );
+        }, this)}
       </ul>
     );
   }
@@ -310,7 +328,7 @@ var AppComponent = React.createClass({
       <div>
         <header>
           <h1>Todos</h1>
-          <input placeholder="What needs to be done?" type="text"
+          <input placeholder="What needs to be done?" type="text" name="title"
             onChange={this.handleTitleChange}
             onKeyPress={this.handleTitleKeyPress}
             value={this.state.title} />
