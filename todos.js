@@ -302,15 +302,14 @@ var AppComponent = React.createClass({
     this.setState({title: event.target.value});
   },
 
-  // If "Enter" is pressed in the main input field, create a new **Todo**
-  // in *localStorage*.
-  handleTitleKeyPress: function(event) {
-    if (13 !== event.keyCode) return;
+  // If "Enter" is pressed in the main input field, it will submit the form.
+  // Create a new **Todo** in *localStorage* and reset the title.
+  handleTitleFormSubmit: function(event) {
+    event.preventDefault();
 
-    var title = event.target.value;
-    if ("" === title) return;
+    if ("" === this.state.title) return;
 
-    this.props.collection.create({title: title});
+    this.props.collection.create({title: this.state.title});
     this.setState({title: ""});
   },
 
@@ -328,10 +327,11 @@ var AppComponent = React.createClass({
       <div>
         <header>
           <h1>Todos</h1>
-          <input placeholder="What needs to be done?" type="text" name="title"
-            onChange={this.handleTitleChange}
-            onKeyPress={this.handleTitleKeyPress}
-            value={this.state.title} />
+          <form onSubmit={this.handleTitleFormSubmit}>
+            <input placeholder="What needs to be done?" type="text" name="title"
+              onChange={this.handleTitleChange}
+              value={this.state.title} />
+          </form>
         </header>
         <MainComponent
           clearCompletedItems={this.clearCompletedItems}
