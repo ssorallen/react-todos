@@ -302,8 +302,8 @@ update when they fire. Let React decide whether the DOM should change.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  componentDidUpdate: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
-    <span class="keyword">if</span> (<span class="keyword">this</span>.state.editing) {
+            <div class="content"><div class='highlight'><pre>  componentDidUpdate: <span class="function"><span class="keyword">function</span><span class="params">(prevProps)</span> {</span>
+    <span class="keyword">if</span> (<span class="keyword">this</span>.props.editing &amp;&amp; !prevProps.editing) {
       <span class="keyword">this</span>.refs.editInput.getDOMNode().focus();
     }
   },</pre></div></div>
@@ -336,25 +336,6 @@ DOM. We don&#39;t have to do any other cleanup!</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <p>List items are initially not in edit mode.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  getInitialState: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
-    <span class="keyword">return</span> {
-      editing: <span class="literal">false</span>
-    };
-  },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
-              </div>
               <p>Stop editing if the input gets an &quot;Enter&quot; keypress.</p>
 
             </div>
@@ -372,27 +353,27 @@ DOM. We don&#39;t have to do any other cleanup!</p>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Hide the <code>.view</code> when editing</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> (<span class="keyword">this</span>.state.editing) {
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> (<span class="keyword">this</span>.props.editing) {
       viewStyles.display = <span class="string">"none"</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-23">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>... and hide the <code>&lt;input&gt;</code> when not editing</p>
 
@@ -426,11 +407,11 @@ DOM. We don&#39;t have to do any other cleanup!</p>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>Set the title of this item&#39;s model when the value of the <code>&lt;input&gt;</code> changes.</p>
 
@@ -443,37 +424,35 @@ DOM. We don&#39;t have to do any other cleanup!</p>
         </li>
         
         
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Tell the parent component this list item is entering edit mode.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  startEditing: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    <span class="keyword">this</span>.props.onStartEditing(<span class="keyword">this</span>.props.model.id);
+  },</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <p>Enter edit mode. Changing the state triggers this component to be
-re-rendered, and on the next pass the <code>&lt;input&gt;</code> will be shown and <code>.view</code>
-will be hidden.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  startEditing: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
-    <span class="keyword">this</span>.setState({editing: <span class="literal">true</span>});
-  },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
-              </div>
-              <p>Exit edit mode, trigger a render.</p>
+              <p>Exit edit mode.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  stopEditing: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
-    <span class="keyword">this</span>.setState({editing: <span class="literal">false</span>});
+    <span class="keyword">this</span>.props.onStopEditing(<span class="keyword">this</span>.props.model.id);
   },
 
   toggleDone: <span class="function"><span class="keyword">function</span><span class="params">(event)</span> {</span>
@@ -485,11 +464,11 @@ will be hidden.</p>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <h2 id="todo-list-component">Todo List Component</h2>
 
@@ -498,11 +477,11 @@ will be hidden.</p>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>Renders a list of todos.</p>
 
@@ -513,30 +492,51 @@ will be hidden.</p>
         </li>
         
         
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Start with no list item in edit mode.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  getInitialState: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    <span class="keyword">return</span> {
+      editingModelId: <span class="literal">null</span>
+    };
+  },</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>Pass the <code>key</code> attribute[1] a unique ID so React can track the elements
-properly.</p>
-<p>[1] <a href="http://facebook.github.io/react/docs/multiple-components.html#dynamic-children">http://facebook.github.io/react/docs/multiple-components.html#dynamic-children</a></p>
+              <p>When a <code>TodoListItemComponent</code> starts editing, it passes its model&#39;s ID to
+this callback. Setting the state triggers this component to re-render and
+render that <code>TodoListItemComponent</code> in edit mode.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  render: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+            <div class="content"><div class='highlight'><pre>  setEditingModelId: <span class="function"><span class="keyword">function</span><span class="params">(modelId)</span> {</span>
+    <span class="keyword">this</span>.setState({editingModelId: modelId});
+  },
+
+  unsetEditingModelId: <span class="function"><span class="keyword">function</span><span class="params">(modelId)</span> {</span>
+    <span class="keyword">if</span> (modelId === <span class="keyword">this</span>.state.editingModelId) {
+      <span class="keyword">this</span>.setState({editingModelId: <span class="literal">null</span>});
+    }
+  },
+
+  render: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
     <span class="keyword">return</span> (
       <span class="xml"><span class="tag">&lt;<span class="title">ul</span> <span class="attribute">id</span>=<span class="value">"todo-list"</span>&gt;</span>
         {this.props.collection.map(function(model) {
-          return <span class="tag">&lt;<span class="title">TodoListItemComponent</span> <span class="attribute">key</span>=<span class="value">{model.id}</span> <span class="attribute">model</span>=<span class="value">{model}</span> /&gt;</span>
-        })}
-      <span class="tag">&lt;/<span class="title">ul</span>&gt;</span>
-    );
-  }
-
-});
-
 </span></pre></div></div>
             
         </li>
@@ -548,9 +548,28 @@ properly.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <h2 id="footer-component">Footer Component</h2>
+              <p>Pass the <code>key</code> attribute[1] a unique ID so React can track the
+elements properly.</p>
+<p>[1] <a href="http://facebook.github.io/react/docs/multiple-components.html#dynamic-children">http://facebook.github.io/react/docs/multiple-components.html#dynamic-children</a></p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="keyword">return</span> (
+            <span class="xml"><span class="tag">&lt;<span class="title">TodoListItemComponent
+</span>              <span class="attribute">editing</span>=<span class="value">{this.state.editingModelId</span> =<span class="value">==</span> <span class="attribute">model.id</span>}
+              <span class="attribute">key</span>=<span class="value">{model.id}</span>
+              <span class="attribute">model</span>=<span class="value">{model}</span>
+              <span class="attribute">onStartEditing</span>=<span class="value">{this.setEditingModelId}</span>
+              <span class="attribute">onStopEditing</span>=<span class="value">{this.unsetEditingModelId}</span> /&gt;</span>
+          );
+        }, this)}
+      <span class="tag">&lt;/<span class="title">ul</span>&gt;</span>
+    );
+  }
+
+});
+
+</span></pre></div></div>
             
         </li>
         
@@ -560,6 +579,19 @@ properly.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <h2 id="footer-component">Footer Component</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>The footer shows the total number of todos and how many are completed.</p>
 
@@ -573,11 +605,11 @@ properly.</p>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>Hide the &quot;Clear X completed items&quot; button if there are no completed
 items.</p>
@@ -591,11 +623,11 @@ items.</p>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>Clicking the &quot;Clear X completed items&quot; button calls the
 &quot;clearCompletedItems&quot; function passed in on <code>props</code>.</p>
@@ -624,11 +656,11 @@ items.</p>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <h2 id="main-component">Main Component</h2>
 
@@ -637,11 +669,11 @@ items.</p>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>The main component contains the list of todos and the footer.</p>
 
@@ -652,11 +684,11 @@ items.</p>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>Tell the <strong>App</strong> to toggle the <em>done</em> state of all <strong>Todo</strong> items.</p>
 
@@ -672,11 +704,11 @@ items.</p>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>Hide the &quot;Mark all as complete&quot; button and the footer if there are no
 <strong>Todo</strong> items.</p>
@@ -713,11 +745,11 @@ var AppComponent = React.createClass({
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>Clear all done todo items, destroying their models.</p>
 
@@ -730,11 +762,11 @@ var AppComponent = React.createClass({
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>Fetch Todos before the App is rendered to the DOM.</p>
 
@@ -747,11 +779,11 @@ var AppComponent = React.createClass({
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>Start the app with a blank <code>&lt;input&gt;</code>.</p>
 
@@ -766,11 +798,11 @@ var AppComponent = React.createClass({
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>Used by the <strong>BackboneMixin</strong> to watch for changes on this component&#39;s
 resource.</p>
@@ -784,11 +816,11 @@ resource.</p>
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p>Set the state of the title when the <code>&lt;input&gt;</code> is changed.</p>
 
@@ -801,11 +833,11 @@ resource.</p>
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p>If &quot;Enter&quot; is pressed in the main input field, create a new <strong>Todo</strong>
 in <em>localStorage</em>.</p>
@@ -831,11 +863,11 @@ in <em>localStorage</em>.</p>
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p>Force updates whenever this <strong>App</strong>&#39;s collection receives events.</p>
 
@@ -848,7 +880,7 @@ in <em>localStorage</em>.</p>
       <span class="xml"><span class="tag">&lt;<span class="title">div</span>&gt;</span>
         <span class="tag">&lt;<span class="title">header</span>&gt;</span>
           <span class="tag">&lt;<span class="title">h1</span>&gt;</span>Todos<span class="tag">&lt;/<span class="title">h1</span>&gt;</span>
-          <span class="tag">&lt;<span class="title">input</span> <span class="attribute">placeholder</span>=<span class="value">"What needs to be done?"</span> <span class="attribute">type</span>=<span class="value">"text"</span>
+          <span class="tag">&lt;<span class="title">input</span> <span class="attribute">placeholder</span>=<span class="value">"What needs to be done?"</span> <span class="attribute">type</span>=<span class="value">"text"</span> <span class="attribute">name</span>=<span class="value">"title"</span>
             <span class="attribute">onChange</span>=<span class="value">{this.handleTitleChange}</span>
             <span class="attribute">onKeyPress</span>=<span class="value">{this.handleTitleKeyPress}</span>
             <span class="attribute">value</span>=<span class="value">{this.state.title}</span> /&gt;</span>
@@ -867,11 +899,11 @@ in <em>localStorage</em>.</p>
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <p>Create a new Todo collection and render the <strong>App</strong> into <code>#todoapp</code>.</p>
 
