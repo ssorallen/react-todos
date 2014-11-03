@@ -1,12 +1,3 @@
-/** @jsx React.DOM */
-
-// JSX Annotation
-// --------------
-
-// The `@jsx React.DOM` annotation above tells the JSXTransformer to compile
-// this file as JSX. It has to be the first line in the file, which is why
-// the description you're reading is below the annotation.
-
 // Todo Model
 // ----------
 
@@ -343,7 +334,7 @@ var AppComponent = React.createClass({
 })
 
 // Create a new Todo collection and render the **App** into `#todoapp`.
-React.renderComponent(
+React.render(
   <AppComponent collection={new TodoList()} />,
   document.getElementById("todoapp")
 );

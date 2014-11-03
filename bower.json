@@ -1,0 +1,30 @@
+{
+  "name": "react-todos",
+  "version": "0.1.0",
+  "homepage": "https://github.com/ssorallen/react-todos",
+  "authors": [
+    "Ross Allen <rossgit@gmail.com>"
+  ],
+  "description": "Backbone's example TODO app with React.js for views",
+  "main": "todos.js",
+  "keywords": [
+    "backbone",
+    "react",
+    "todo"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "backbone": "~1.1.2",
+    "react": "~0.12.0",
+    "underscore": "~1.7.0",
+    "backbone.localStorage": "~1.1.14"
+  }
+}
