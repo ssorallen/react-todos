@@ -1,3 +1,5 @@
+var PropTypes = React.PropTypes;
+
 // Todo Model
 // ----------
 
@@ -67,10 +69,17 @@ var BackboneMixin = {
 // The DOM for a todo item...
 var TodoListItemComponent = React.createClass({
 
+  propTypes: {
+    editing: PropTypes.bool.isRequired,
+    model: PropTypes.object.isRequired,
+    onStartEditing: PropTypes.func.isRequired,
+    onStopEditing: PropTypes.func.isRequired,
+  },
+
   // If the component updates and is in edit mode, send focus to the `<input>`.
   componentDidUpdate: function(prevProps) {
     if (this.props.editing && !prevProps.editing) {
-      this.refs.editInput.getDOMNode().focus();
+      React.findDOMNode(this.refs.editInput).focus();
     }
   },
 
@@ -147,6 +156,10 @@ var TodoListItemComponent = React.createClass({
 // Renders a list of todos.
 var TodoListComponent = React.createClass({
 
+  propTypes: {
+    collection: PropTypes.object.isRequired,
+  },
+
   // Start with no list item in edit mode.
   getInitialState: function() {
     return {
@@ -196,24 +209,30 @@ var TodoListComponent = React.createClass({
 // The footer shows the total number of todos and how many are completed.
 var FooterComponent = React.createClass({
 
-  render: function() {
-    var clearCompletedStyles = {};
+  propTypes: {
+    itemsDoneCount: PropTypes.number.isRequired,
+    itemsRemainingCount: PropTypes.number.isRequired,
+  },
 
-    // Hide the "Clear X completed items" button if there are no completed
+  render: function() {
+    var clearCompletedButton;
+
+    // Show the "Clear X completed items" button only if there are completed
     // items.
-    if (0 === this.props.itemsDoneCount) {
-      clearCompletedStyles.display = "none";
+    if (this.props.itemsDoneCount > 0) {
+      clearCompletedButton = (
+        <a id="clear-completed" onClick={this.props.clearCompletedItems}>
+          Clear {this.props.itemsDoneCount} completed
+          {1 === this.props.itemsDoneCount ? " item" : " items"}
+        </a>
+      );
     }
 
     // Clicking the "Clear X completed items" button calls the
     // "clearCompletedItems" function passed in on `props`.
     return (
       <footer>
-        <a id="clear-completed" style={clearCompletedStyles}
-            onClick={this.props.clearCompletedItems}>
-          Clear {this.props.itemsDoneCount} completed
-          {1 === this.props.itemsDoneCount ? " item" : " items"}
-        </a>
+        {clearCompletedButton}
         <div className="todo-count">
           <b>{this.props.itemsRemainingCount}</b>
           {1 === this.props.itemsRemainingCount ? " item" : " items"} left
@@ -230,40 +249,48 @@ var FooterComponent = React.createClass({
 // The main component contains the list of todos and the footer.
 var MainComponent = React.createClass({
 
+  propTypes: {
+    clearCompletedItems: PropTypes.func.isRequired,
+    collection: PropTypes.object.isRequired,
+    toggleAllItemsCompleted: PropTypes.func.isRequired,
+  },
+
   // Tell the **App** to toggle the *done* state of all **Todo** items.
   toggleAllItemsCompleted: function(event) {
     this.props.toggleAllItemsCompleted(event.target.checked);
   },
 
   render: function() {
-    var style = {};
-
-    // Hide the "Mark all as complete" button and the footer if there are no
-    // **Todo** items.
     if (0 === this.props.collection.length) {
-      style.display = "none";
+      // Don't display the "Mark all as complete" button and the footer if there
+      // are no **Todo** items.
+      return null;
+    } else {
+      return (
+        <section id="main">
+          <input id="toggle-all" type="checkbox"
+            checked={0 === this.props.collection.remaining().length}
+            onChange={this.toggleAllItemsCompleted} />
+          <label htmlFor="toggle-all">
+            Mark all as complete
+          </label>
+          <TodoListComponent collection={this.props.collection} />
+          <FooterComponent
+            clearCompletedItems={this.props.clearCompletedItems}
+            itemsRemainingCount={this.props.collection.remaining().length}
+            itemsDoneCount={this.props.collection.done().length} />
+        </section>
+      );
     }
-
-    return (
-      <section id="main" style={style}>
-        <input id="toggle-all" type="checkbox"
-          checked={0 === this.props.collection.remaining().length}
-          onChange={this.toggleAllItemsCompleted} />
-        <label htmlFor="toggle-all">
-          Mark all as complete
-        </label>
-        <TodoListComponent collection={this.props.collection} />
-        <FooterComponent
-          clearCompletedItems={this.props.clearCompletedItems}
-          itemsRemainingCount={this.props.collection.remaining().length}
-          itemsDoneCount={this.props.collection.done().length} />
-      </section>
-    );
   }
 
 });
 
 var AppComponent = React.createClass({
+
+  propTypes: {
+    collection: PropTypes.object.isRequired,
+  },
 
   // Clear all done todo items, destroying their models.
   clearCompletedItems: function() {
