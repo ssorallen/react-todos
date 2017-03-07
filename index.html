@@ -22,14 +22,14 @@
       <a href="http://localtodos.com/">Backbone.js Todos</a>
     </div>
 
-    <script src="bower_components/underscore/underscore-min.js"></script>
-    <script src="bower_components/backbone/backbone.js"></script>
-    <script src="bower_components/backbone.localStorage/backbone.localStorage-min.js"></script>
-    <script src="bower_components/react/JSXTransformer.js"></script>
-    <script src="bower_components/react/react.min.js"></script>
+    <script src="node_modules/underscore/underscore-min.js"></script>
+    <script src="node_modules/backbone/backbone-min.js"></script>
+    <script src="node_modules/backbone.localstorage/backbone.localStorage-min.js"></script>
+    <script src="node_modules/react/dist/react.min.js"></script>
+    <script src="node_modules/react-dom/dist/react-dom.min.js"></script>
+    <script src="node_modules/babel-standalone/babel.min.js"></script>
 
-    <!-- Use type="text/jsx" so "todos.js" will be compiled by the JSXTransformer
-         as JSX syntax -->
-    <script src="todos.js" type="text/jsx"></script>
+    <!-- Use type="text/babel" so "todos.js" will be compiled by Babel as JSX syntax -->
+    <script src="todos.js" type="text/babel" data-presets="es2015,react"></script>
   </body>
 </html>

@@ -361,7 +361,7 @@ var AppComponent = React.createClass({
 })
 
 // Create a new Todo collection and render the **App** into `#todoapp`.
-React.render(
+ReactDOM.render(
   <AppComponent collection={new TodoList()} />,
   document.getElementById("todoapp")
 );
