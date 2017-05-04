@@ -1,45 +1,9 @@
-var PropTypes = React.PropTypes;
-
-// Todo Model
-// ----------
-
-// Our basic **Todo** model has `title` and `done` attributes.
-var Todo = Backbone.Model.extend({
-
-  // Default attributes for the Todo item.
-  defaults: function() {
-    return {
-      title: "",
-      done: false
-    };
-  }
-
-});
-
-// Todo Collection
-// ---------------
-
-// The collection of Todos is backed by *localStorage* instead of a remote
-// server.
-var TodoList = Backbone.Collection.extend({
-
-  // Reference to this collection's model.
-  model: Todo,
-
-  // Save all of the todo items under the `"todos-react"` namespace.
-  localStorage: new Backbone.LocalStorage("todos-react"),
-
-  // Filter down the list of all todo items that are finished.
-  done: function() {
-    return this.where({done: true});
-  },
-
-  // Filter down the list to only todo items that are still not finished.
-  remaining: function() {
-    return this.where({done: false});
-  }
-
-});
+import './App.css';
+import _ from 'underscore';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 // Backbone/React Integration
 // --------------------------
@@ -47,7 +11,7 @@ var TodoList = Backbone.Collection.extend({
 // Updates React components when their Backbone resources change. Expects the
 // component to implement a method called `getResource` that returns an object
 // that extends `Backbone.Events`.
-var BackboneMixin = {
+const BackboneMixin = {
 
   // Listen to all events on this component's collection or model and force an
   // update when they fire. Let React decide whether the DOM should change.
@@ -67,7 +31,7 @@ var BackboneMixin = {
 // ------------------------
 
 // The DOM for a todo item...
-var TodoListItemComponent = React.createClass({
+const TodoListItemComponent = createReactClass({
 
   propTypes: {
     editing: PropTypes.bool.isRequired,
@@ -79,7 +43,7 @@ var TodoListItemComponent = React.createClass({
   // If the component updates and is in edit mode, send focus to the `<input>`.
   componentDidUpdate: function(prevProps) {
     if (this.props.editing && !prevProps.editing) {
-      React.findDOMNode(this.refs.editInput).focus();
+      ReactDOM.findDOMNode(this.refs.editInput).focus();
     }
   },
 
@@ -154,7 +118,7 @@ var TodoListItemComponent = React.createClass({
 // -------------------
 
 // Renders a list of todos.
-var TodoListComponent = React.createClass({
+const TodoListComponent = createReactClass({
 
   propTypes: {
     collection: PropTypes.object.isRequired,
@@ -207,7 +171,7 @@ var TodoListComponent = React.createClass({
 // ----------------
 
 // The footer shows the total number of todos and how many are completed.
-var FooterComponent = React.createClass({
+const FooterComponent = createReactClass({
 
   propTypes: {
     itemsDoneCount: PropTypes.number.isRequired,
@@ -247,7 +211,7 @@ var FooterComponent = React.createClass({
 // --------------
 
 // The main component contains the list of todos and the footer.
-var MainComponent = React.createClass({
+const MainComponent = createReactClass({
 
   propTypes: {
     clearCompletedItems: PropTypes.func.isRequired,
@@ -286,7 +250,7 @@ var MainComponent = React.createClass({
 
 });
 
-var AppComponent = React.createClass({
+const App = createReactClass({
 
   propTypes: {
     collection: PropTypes.object.isRequired,
@@ -360,8 +324,4 @@ var AppComponent = React.createClass({
   }
 })
 
-// Create a new Todo collection and render the **App** into `#todoapp`.
-ReactDOM.render(
-  <AppComponent collection={new TodoList()} />,
-  document.getElementById("todoapp")
-);
+export default App;

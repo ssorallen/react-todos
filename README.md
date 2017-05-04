@@ -17,6 +17,16 @@ http://ssorallen.com/react-todos/docs/
 
 The documentation is created using [Docco](http://jashkenas.github.io/docco/).
 
+## Running Locally
+
+1. Clone this repository
+2. Install dependencies
+
+        $ yarn install
+3. Run the local server
+
+        $ yarn start
+
 ### Favicon
 
 The great little todo list favicon comes from [Typicons](http://typicons.com/).
