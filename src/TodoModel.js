@@ -4,7 +4,7 @@ import Backbone from 'backbone';
 // ----------
 
 // Our basic **Todo** model has `title` and `done` attributes.
-const Todo = Backbone.Model.extend({
+const TodoModel = Backbone.Model.extend({
 
   // Default attributes for the Todo item.
   defaults: function() {
@@ -16,4 +16,4 @@ const Todo = Backbone.Model.extend({
 
 });
 
-export default Todo;
+export default TodoModel;

@@ -1,16 +1,16 @@
 import Backbone from 'backbone';
 import 'backbone.localstorage';
-import Todo from './Todo';
+import TodoModel from './TodoModel';
 
 // Todo Collection
 // ---------------
 
 // The collection of Todos is backed by *localStorage* instead of a remote
 // server.
-const TodoList = Backbone.Collection.extend({
+const TodoCollection = Backbone.Collection.extend({
 
   // Reference to this collection's model.
-  model: Todo,
+  model: TodoModel,
 
   // Save all of the todo items under the `"todos-react"` namespace.
   localStorage: new Backbone.LocalStorage("todos-react"),
@@ -27,4 +27,4 @@ const TodoList = Backbone.Collection.extend({
 
 });
 
-export default TodoList;
+export default TodoCollection;
