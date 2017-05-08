@@ -1,9 +1,9 @@
 import './App.css';
 import _ from 'underscore';
+import Body from './Body';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import React from 'react';
-import TodoList from './TodoList';
 
 // Backbone/React Integration
 // --------------------------
@@ -26,89 +26,6 @@ const BackboneMixin = {
   }
 
 };
-
-// Footer Component
-// ----------------
-
-// The footer shows the total number of todos and how many are completed.
-const FooterComponent = createReactClass({
-
-  propTypes: {
-    itemsDoneCount: PropTypes.number.isRequired,
-    itemsRemainingCount: PropTypes.number.isRequired,
-  },
-
-  render: function() {
-    var clearCompletedButton;
-
-    // Show the "Clear X completed items" button only if there are completed
-    // items.
-    if (this.props.itemsDoneCount > 0) {
-      clearCompletedButton = (
-        <a id="clear-completed" onClick={this.props.clearCompletedItems}>
-          Clear {this.props.itemsDoneCount} completed
-          {1 === this.props.itemsDoneCount ? " item" : " items"}
-        </a>
-      );
-    }
-
-    // Clicking the "Clear X completed items" button calls the
-    // "clearCompletedItems" function passed in on `props`.
-    return (
-      <footer>
-        {clearCompletedButton}
-        <div className="todo-count">
-          <b>{this.props.itemsRemainingCount}</b>
-          {1 === this.props.itemsRemainingCount ? " item" : " items"} left
-        </div>
-      </footer>
-    );
-  }
-
-});
-
-// Main Component
-// --------------
-
-// The main component contains the list of todos and the footer.
-const MainComponent = createReactClass({
-
-  propTypes: {
-    clearCompletedItems: PropTypes.func.isRequired,
-    collection: PropTypes.object.isRequired,
-    toggleAllItemsCompleted: PropTypes.func.isRequired,
-  },
-
-  // Tell the **App** to toggle the *done* state of all **Todo** items.
-  toggleAllItemsCompleted: function(event) {
-    this.props.toggleAllItemsCompleted(event.target.checked);
-  },
-
-  render: function() {
-    if (0 === this.props.collection.length) {
-      // Don't display the "Mark all as complete" button and the footer if there
-      // are no **Todo** items.
-      return null;
-    } else {
-      return (
-        <section id="main">
-          <input id="toggle-all" type="checkbox"
-            checked={0 === this.props.collection.remaining().length}
-            onChange={this.toggleAllItemsCompleted} />
-          <label htmlFor="toggle-all">
-            Mark all as complete
-          </label>
-          <TodoList collection={this.props.collection} />
-          <FooterComponent
-            clearCompletedItems={this.props.clearCompletedItems}
-            itemsRemainingCount={this.props.collection.remaining().length}
-            itemsDoneCount={this.props.collection.done().length} />
-        </section>
-      );
-    }
-  }
-
-});
 
 const App = createReactClass({
 
@@ -175,7 +92,7 @@ const App = createReactClass({
               value={this.state.title} />
           </form>
         </header>
-        <MainComponent
+        <Body
           clearCompletedItems={this.clearCompletedItems}
           collection={this.props.collection}
           toggleAllItemsCompleted={this.toggleAllItemsCompleted} />

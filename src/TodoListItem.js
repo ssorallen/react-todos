@@ -26,35 +26,35 @@ export default class TodoListItem extends React.Component {
   // Destroying the model fires a `remove` event on the model's collection,
   // which forces an update and removes this **TodoListItemComponent** from the
   // DOM. We don't have to do any other cleanup!
-  destroy() {
+  destroy = () => {
     this.props.model.destroy();
-  }
+  };
 
   // Stop editing if the input gets an "Enter" keypress.
-  handleEditKeyPress(event) {
+  handleEditKeyPress = (event) => {
     if (13 === event.keyCode) {
       this.stopEditing();
     }
-  }
+  };
 
   // Set the title of this item's model when the value of the `<input>` changes.
-  setTitle(event) {
+  setTitle = (event) => {
     this.props.model.set("title", event.target.value);
-  }
+  };
 
   // Tell the parent component this list item is entering edit mode.
-  startEditing() {
+  startEditing = () => {
     this.props.onStartEditing(this.props.model.id);
-  }
+  };
 
   // Exit edit mode.
-  stopEditing() {
+  stopEditing = () => {
     this.props.onStopEditing(this.props.model.id);
-  }
+  };
 
-  toggleDone(event) {
+  toggleDone = (event) => {
     this.props.model.set("done", event.target.checked);
-  }
+  };
 
   render() {
     var inputStyles = {};

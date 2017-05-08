@@ -24,15 +24,15 @@ export default class TodoList extends React.Component {
   // When a `TodoListItemComponent` starts editing, it passes its model's ID to
   // this callback. Setting the state triggers this component to re-render and
   // render that `TodoListItemComponent` in edit mode.
-  setEditingModelId(modelId) {
+  setEditingModelId = (modelId) => {
     this.setState({editingModelId: modelId});
-  }
+  };
 
-  unsetEditingModelId(modelId) {
+  unsetEditingModelId = (modelId) => {
     if (modelId === this.state.editingModelId) {
       this.setState({editingModelId: null});
     }
-  }
+  };
 
   render() {
     return (
