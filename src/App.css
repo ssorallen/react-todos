@@ -63,55 +63,6 @@ body {
   list-style: none;
 }
 
-#todo-list li {
-  padding: 18px 20px 18px 0;
-  position: relative;
-  font-size: 24px;
-  border-bottom: 1px solid #cccccc;
-}
-
-#todo-list li:last-child {
-  border-bottom: none;
-}
-
-#todo-list li.done label {
-  color: #777777;
-  text-decoration: line-through;
-}
-
-#todo-list .destroy {
-  position: absolute;
-  right: 5px;
-  top: 20px;
-  display: none;
-  cursor: pointer;
-  width: 20px;
-  height: 20px;
-  background: url(img/destroy.png) no-repeat;
-}
-
-#todo-list li:hover .destroy {
-    display: block;
-}
-
-#todo-list .destroy:hover {
-    background-position: 0 -20px;
-}
-
-#todo-list li.editing {
-  border-bottom: none;
-  margin-top: -1px;
-  padding: 0;
-}
-
-#todo-list li.editing:last-child {
-  margin-bottom: -1px;
-}
-
-#todo-list li .view label {
-  word-break: break-word;
-}
-
 #todoapp footer {
   margin: 0 -20px -20px -20px;
   overflow: hidden;
