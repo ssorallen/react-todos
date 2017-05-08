@@ -57,12 +57,6 @@ body {
   font-style: italic;
 }
 
-#todo-list {
-  margin: 10px 0;
-  padding: 0;
-  list-style: none;
-}
-
 #todoapp footer {
   margin: 0 -20px -20px -20px;
   overflow: hidden;

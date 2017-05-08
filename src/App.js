@@ -3,7 +3,7 @@ import _ from 'underscore';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import React from 'react';
-import TodoListItem from './TodoListItem';
+import TodoList from './TodoList';
 
 // Backbone/React Integration
 // --------------------------
@@ -26,59 +26,6 @@ const BackboneMixin = {
   }
 
 };
-
-// Todo List Component
-// -------------------
-
-// Renders a list of todos.
-const TodoListComponent = createReactClass({
-
-  propTypes: {
-    collection: PropTypes.object.isRequired,
-  },
-
-  // Start with no list item in edit mode.
-  getInitialState: function() {
-    return {
-      editingModelId: null
-    };
-  },
-
-  // When a `TodoListItemComponent` starts editing, it passes its model's ID to
-  // this callback. Setting the state triggers this component to re-render and
-  // render that `TodoListItemComponent` in edit mode.
-  setEditingModelId: function(modelId) {
-    this.setState({editingModelId: modelId});
-  },
-
-  unsetEditingModelId: function(modelId) {
-    if (modelId === this.state.editingModelId) {
-      this.setState({editingModelId: null});
-    }
-  },
-
-  render: function() {
-    return (
-      <ul id="todo-list">
-        {this.props.collection.map(function(model) {
-          // Pass the `key` attribute[1] a unique ID so React can track the
-          // elements properly.
-          //
-          // [1] http://facebook.github.io/react/docs/multiple-components.html#dynamic-children
-          return (
-            <TodoListItem
-              editing={this.state.editingModelId === model.id}
-              key={model.id}
-              model={model}
-              onStartEditing={this.setEditingModelId}
-              onStopEditing={this.unsetEditingModelId} />
-          );
-        }, this)}
-      </ul>
-    );
-  }
-
-});
 
 // Footer Component
 // ----------------
@@ -151,7 +98,7 @@ const MainComponent = createReactClass({
           <label htmlFor="toggle-all">
             Mark all as complete
           </label>
-          <TodoListComponent collection={this.props.collection} />
+          <TodoList collection={this.props.collection} />
           <FooterComponent
             clearCompletedItems={this.props.clearCompletedItems}
             itemsRemainingCount={this.props.collection.remaining().length}
