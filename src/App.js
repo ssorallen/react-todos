@@ -4,63 +4,54 @@ import Body from './Body';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connectBackboneToReact } from 'connect-backbone-to-react';
-import createReactClass from 'create-react-class';
 
-// Backbone/React Integration
-// --------------------------
+class App extends React.Component {
 
-const App = createReactClass({
-
-  propTypes: {
+  static propTypes = {
     collection: PropTypes.object.isRequired,
-  },
-
-  // Clear all done todo items, destroying their models.
-  clearCompletedItems: function() {
-    _.invoke(this.props.collection.done(), "destroy");
-  },
-
-  // Fetch Todos before the App is rendered to the DOM.
-  componentWillMount: function() {
-    this.props.collection.fetch();
-  },
+  };
 
   // Start the app with a blank `<input>`.
-  getInitialState: function() {
-    return {
-      title: ""
+  constructor(props) {
+    super(props);
+    this.state = {
+      title: "",
     };
-  },
+  }
 
-  // Used by the **BackboneMixin** to watch for changes on this component's
-  // resource.
-  getResource: function() {
-    return this.props.collection;
-  },
+  // Fetch Todos before the App is rendered to the DOM.
+  componentWillMount() {
+    this.props.collection.fetch();
+  }
+
+  // Clear all done todo items, destroying their models.
+  clearCompletedItems = () => {
+    _.invoke(this.props.collection.done(), "destroy");
+  };
 
   // Set the state of the title when the `<input>` is changed.
-  handleTitleChange: function(event) {
+  handleTitleChange = (event) => {
     this.setState({title: event.target.value});
-  },
+  };
 
   // If "Enter" is pressed in the main input field, it will submit the form.
   // Create a new **Todo** in *localStorage* and reset the title.
-  handleTitleFormSubmit: function(event) {
+  handleTitleFormSubmit = (event) => {
     event.preventDefault();
 
     if ("" === this.state.title) return;
 
     this.props.collection.create({title: this.state.title});
     this.setState({title: ""});
-  },
+  };
 
-  toggleAllItemsCompleted: function(completed) {
+  toggleAllItemsCompleted = (completed) => {
     this.props.collection.each(function(todo) {
       todo.save({"done": completed});
     });
-  },
+  };
 
-  render: function() {
+  render() {
     return (
       <div>
         <header>
@@ -78,7 +69,10 @@ const App = createReactClass({
       </div>
     );
   }
-})
+}
+
+// Backbone/React Integration
+// --------------------------
 
 const mapModelsToProps = (models) => ({
   collection: models.todos,
