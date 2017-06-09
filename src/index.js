@@ -5,6 +5,6 @@ import TodoCollection from './TodoCollection';
 
 // Create a new Todo collection and render the **App** into `#todoapp`.
 ReactDOM.render(
-  <App collection={new TodoCollection()} />,
+  <App models={{ todos: new TodoCollection() }} />,
   document.getElementById("todoapp")
 );

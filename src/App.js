@@ -1,31 +1,13 @@
 import './App.css';
 import _ from 'underscore';
 import Body from './Body';
-import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connectBackboneToReact } from 'connect-backbone-to-react';
+import createReactClass from 'create-react-class';
 
 // Backbone/React Integration
 // --------------------------
-
-// Updates React components when their Backbone resources change. Expects the
-// component to implement a method called `getResource` that returns an object
-// that extends `Backbone.Events`.
-const BackboneMixin = {
-
-  // Listen to all events on this component's collection or model and force an
-  // update when they fire. Let React decide whether the DOM should change.
-  componentDidMount: function() {
-    this._boundForceUpdate = this.forceUpdate.bind(this, null);
-    this.getResource().on("all", this._boundForceUpdate, this);
-  },
-
-  // Clean up the listener when the component will be removed.
-  componentWillUnmount: function() {
-    this.getResource().off("all", this._boundForceUpdate);
-  }
-
-};
 
 const App = createReactClass({
 
@@ -78,9 +60,6 @@ const App = createReactClass({
     });
   },
 
-  // Force updates whenever this **App**'s collection receives events.
-  mixins: [BackboneMixin],
-
   render: function() {
     return (
       <div>
@@ -101,4 +80,8 @@ const App = createReactClass({
   }
 })
 
-export default App;
+const mapModelsToProps = (models) => ({
+  collection: models.todos,
+});
+
+export default connectBackboneToReact(mapModelsToProps)(App);
