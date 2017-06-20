@@ -5,17 +5,11 @@ Components for views in place of `Backbone.View`.
 
 ## Demo
 
-http://ssorallen.com/react-todos/
+https://ssorallen.github.io/react-todos/
 
 The demo uses local storage to save todos in the browser. The views are all rendered
 with React, which means there is no dependency on another DOM manipulation library
 like jQuery.
-
-## Annotated Source
-
-http://ssorallen.com/react-todos/docs/
-
-The documentation is created using [Docco](http://jashkenas.github.io/docco/).
 
 ## Running Locally
 
