@@ -8,15 +8,13 @@
     "doc": "docs"
   },
   "scripts": {
-    "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "flow": "flow",
+    "start": "react-scripts start",
+    "test": "react-scripts test --env=jsdom"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ssorallen/react-todos.git"
-  },
+  "repository": "ssorallen/react-todos",
   "keywords": [
     "backbone",
     "reactjs",
@@ -39,6 +37,7 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "flow-bin": "^0.53.1",
     "react-scripts": "^0.9.5"
   }
 }

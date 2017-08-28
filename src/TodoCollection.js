@@ -1,3 +1,4 @@
+/* @flow */
 import Backbone from 'backbone';
 import 'backbone.localstorage';
 import TodoModel from './TodoModel';

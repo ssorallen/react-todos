@@ -1,23 +1,23 @@
+/* @flow */
 import './Body.css';
 import Footer from './Footer';
-import PropTypes from 'prop-types';
 import React from 'react';
 import TodoList from './TodoList';
 
 // Main Component
 // --------------
 
-// The main component contains the list of todos and the footer.
-export default class Body extends React.Component {
+interface Props {
+  clearCompletedItems: () => void;
+  collection: Object;
+  toggleAllItemsCompleted: (toggle: boolean) => void;
+}
 
-  static propTypes = {
-    clearCompletedItems: PropTypes.func.isRequired,
-    collection: PropTypes.object.isRequired,
-    toggleAllItemsCompleted: PropTypes.func.isRequired,
-  };
+// The main component contains the list of todos and the footer.
+export default class Body extends React.Component<Props> {
 
   // Tell the **App** to toggle the *done* state of all **Todo** items.
-  toggleAllItemsCompleted = (event) => {
+  toggleAllItemsCompleted = (event: SyntheticInputEvent<HTMLInputElement>) => {
     this.props.toggleAllItemsCompleted(event.target.checked);
   };
 

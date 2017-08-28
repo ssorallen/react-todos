@@ -1,3 +1,4 @@
+/* @flow */
 import './App.css';
 import _ from 'underscore';
 import Body from './Body';
@@ -5,11 +6,17 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connectBackboneToReact } from 'connect-backbone-to-react';
 
-class App extends React.Component {
+interface Props {
+  collection: Object;
+}
 
-  static propTypes = {
-    collection: PropTypes.object.isRequired,
-  };
+interface State {
+  title: string;
+}
+
+class App extends React.Component<Props, State> {
+
+  state: State;
 
   // Start the app with a blank `<input>`.
   constructor(props) {

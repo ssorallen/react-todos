@@ -1,3 +1,4 @@
+/* @flow */
 import Backbone from 'backbone';
 
 // Todo Model

@@ -1,25 +1,26 @@
+/* @flow */
 import './TodoListItem.css';
-import PropTypes from 'prop-types';
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 // Todo List Item Component
 // ------------------------
 
-// The DOM for a todo item...
-export default class TodoListItem extends React.Component {
+interface Props {
+  editing: boolean;
+  model: Object;
+  onStartEditing: () => void;
+  onStopEditing: () => void;
+}
 
-  static propTypes = {
-    editing: PropTypes.bool.isRequired,
-    model: PropTypes.object.isRequired,
-    onStartEditing: PropTypes.func.isRequired,
-    onStopEditing: PropTypes.func.isRequired,
-  };
+// The DOM for a todo item...
+export default class TodoListItem extends React.Component<Props> {
+
+  _editInput: ?HTMLInputElement;
 
   // If the component updates and is in edit mode, send focus to the `<input>`.
-  componentDidUpdate(prevProps) {
-    if (this.props.editing && !prevProps.editing) {
-      ReactDOM.findDOMNode(this.refs.editInput).focus();
+  componentDidUpdate(prevProps: Props) {
+    if (this._editInput != null && this.props.editing && !prevProps.editing) {
+      this._editInput.focus();
     }
   }
 
@@ -31,28 +32,28 @@ export default class TodoListItem extends React.Component {
   };
 
   // Stop editing if the input gets an "Enter" keypress.
-  handleEditKeyPress = (event) => {
+  handleEditKeyPress = (event: SyntheticKeyboardEvent<HTMLInputElement>) => {
     if (13 === event.keyCode) {
       this.stopEditing();
     }
   };
 
   // Set the title of this item's model when the value of the `<input>` changes.
-  setTitle = (event) => {
+  setTitle = (event: SyntheticInputEvent<HTMLInputElement>) => {
     this.props.model.set("title", event.target.value);
   };
 
   // Tell the parent component this list item is entering edit mode.
   startEditing = () => {
-    this.props.onStartEditing(this.props.model.id);
+    this.props.onStartEditing();
   };
 
   // Exit edit mode.
   stopEditing = () => {
-    this.props.onStopEditing(this.props.model.id);
+    this.props.onStopEditing();
   };
 
-  toggleDone = (event) => {
+  toggleDone = (event: SyntheticInputEvent<HTMLInputElement>) => {
     this.props.model.set("done", event.target.checked);
   };
 
@@ -72,18 +73,25 @@ export default class TodoListItem extends React.Component {
     return (
       <li className={this.props.model.get("done") ? "done" : ""}>
         <div className="view" onDoubleClick={this.startEditing} style={viewStyles}>
-          <input className="toggle" type="checkbox"
+          <input
             checked={this.props.model.get("done")}
-            onChange={this.toggleDone} />
+            className="toggle"
+            onChange={this.toggleDone}
+            type="checkbox"
+          />
           <label>{this.props.model.get("title")}</label>
           <a className="destroy" onClick={this.destroy}></a>
         </div>
-        <input className="edit" ref="editInput" type="text"
+        <input
+          className="edit"
           onBlur={this.stopEditing}
           onChange={this.setTitle}
           onKeyPress={this.handleEditKeyPress}
+          ref={ref => { this._editInput = ref; }}
           style={inputStyles}
-          value={this.props.model.get("title")} />
+          type="text"
+          value={this.props.model.get("title")}
+        />
       </li>
     );
   }

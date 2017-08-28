@@ -1,17 +1,18 @@
+/* @flow */
 import './Footer.css';
-import PropTypes from 'prop-types';
 import React from 'react';
 
 // Footer Component
 // ----------------
 
-// The footer shows the total number of todos and how many are completed.
-export default class Footer extends React.Component {
+interface Props {
+  clearCompletedItems: (event: SyntheticMouseEvent<HTMLAnchorElement>) => void;
+  itemsDoneCount: number;
+  itemsRemainingCount: number;
+}
 
-  static propTypes = {
-    itemsDoneCount: PropTypes.number.isRequired,
-    itemsRemainingCount: PropTypes.number.isRequired,
-  };
+// The footer shows the total number of todos and how many are completed.
+export default class Footer extends React.Component<Props> {
 
   render() {
     var clearCompletedButton;
