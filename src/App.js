@@ -2,12 +2,12 @@
 import './App.css';
 import _ from 'underscore';
 import Body from './Body';
-import PropTypes from 'prop-types';
 import React from 'react';
+import TodoCollection from './TodoCollection';
 import { connectBackboneToReact } from 'connect-backbone-to-react';
 
 interface Props {
-  collection: Object;
+  collection: TodoCollection;
 }
 
 interface State {
@@ -16,10 +16,8 @@ interface State {
 
 class App extends React.Component<Props, State> {
 
-  state: State;
-
   // Start the app with a blank `<input>`.
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       title: "",
@@ -37,13 +35,13 @@ class App extends React.Component<Props, State> {
   };
 
   // Set the state of the title when the `<input>` is changed.
-  handleTitleChange = (event) => {
+  handleTitleChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
     this.setState({title: event.target.value});
   };
 
   // If "Enter" is pressed in the main input field, it will submit the form.
   // Create a new **Todo** in *localStorage* and reset the title.
-  handleTitleFormSubmit = (event) => {
+  handleTitleFormSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if ("" === this.state.title) return;
@@ -53,7 +51,7 @@ class App extends React.Component<Props, State> {
   };
 
   toggleAllItemsCompleted = (completed) => {
-    this.props.collection.each(function(todo) {
+    this.props.collection.forEach(function(todo) {
       todo.save({"done": completed});
     });
   };
@@ -64,9 +62,13 @@ class App extends React.Component<Props, State> {
         <header>
           <h1>Todos</h1>
           <form onSubmit={this.handleTitleFormSubmit}>
-            <input placeholder="What needs to be done?" type="text" name="title"
+            <input
+              name="title"
               onChange={this.handleTitleChange}
-              value={this.state.title} />
+              placeholder="What needs to be done?"
+              type="text"
+              value={this.state.title}
+            />
           </form>
         </header>
         <Body
@@ -76,6 +78,7 @@ class App extends React.Component<Props, State> {
       </div>
     );
   }
+
 }
 
 // Backbone/React Integration

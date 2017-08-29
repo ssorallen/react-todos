@@ -1,15 +1,16 @@
 /* @flow */
 import './TodoListItem.css';
 import React from 'react';
+import TodoModel from './TodoModel';
 
 // Todo List Item Component
 // ------------------------
 
 interface Props {
   editing: boolean;
-  model: Object;
-  onStartEditing: () => void;
-  onStopEditing: () => void;
+  model: TodoModel;
+  onStartEditing: (modelId: number | string) => void;
+  onStopEditing: (modelId: number | string) => void;
 }
 
 // The DOM for a todo item...
@@ -45,12 +46,12 @@ export default class TodoListItem extends React.Component<Props> {
 
   // Tell the parent component this list item is entering edit mode.
   startEditing = () => {
-    this.props.onStartEditing();
+    this.props.onStartEditing(this.props.model.id);
   };
 
   // Exit edit mode.
   stopEditing = () => {
-    this.props.onStopEditing();
+    this.props.onStopEditing(this.props.model.id);
   };
 
   toggleDone = (event: SyntheticInputEvent<HTMLInputElement>) => {

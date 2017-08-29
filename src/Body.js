@@ -2,6 +2,7 @@
 import './Body.css';
 import Footer from './Footer';
 import React from 'react';
+import TodoCollection from './TodoCollection';
 import TodoList from './TodoList';
 
 // Main Component
@@ -9,7 +10,7 @@ import TodoList from './TodoList';
 
 interface Props {
   clearCompletedItems: () => void;
-  collection: Object;
+  collection: TodoCollection;
   toggleAllItemsCompleted: (toggle: boolean) => void;
 }
 
@@ -22,7 +23,7 @@ export default class Body extends React.Component<Props> {
   };
 
   render() {
-    if (0 === this.props.collection.length) {
+    if (0 === this.props.collection.lkkength) {
       // Don't display the "Mark all as complete" button and the footer if there
       // are no **Todo** items.
       return null;

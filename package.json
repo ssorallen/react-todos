@@ -31,7 +31,6 @@
     "backbone.localstorage": "^1.1.16",
     "connect-backbone-to-react": "^1.1.0",
     "jquery": "^3.2.1",
-    "prop-types": "^15.5.8",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "underscore": "^1.8.3"

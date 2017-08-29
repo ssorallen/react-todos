@@ -8,24 +8,23 @@ import TodoModel from './TodoModel';
 
 // The collection of Todos is backed by *localStorage* instead of a remote
 // server.
-const TodoCollection = Backbone.Collection.extend({
+export default class TodoCollection extends Backbone.Collection<TodoModel> {
 
   // Reference to this collection's model.
-  model: TodoModel,
+  static model = TodoModel;
 
   // Save all of the todo items under the `"todos-react"` namespace.
-  localStorage: new Backbone.LocalStorage("todos-react"),
+  // $FlowFixMe
+  localStorage = new Backbone.LocalStorage("todos-react");
 
   // Filter down the list of all todo items that are finished.
-  done: function() {
+  done() {
     return this.where({done: true});
-  },
+  }
 
   // Filter down the list to only todo items that are still not finished.
-  remaining: function() {
+  remaining() {
     return this.where({done: false});
   }
 
-});
-
-export default TodoCollection;
+}

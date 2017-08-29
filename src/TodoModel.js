@@ -5,16 +5,12 @@ import Backbone from 'backbone';
 // ----------
 
 // Our basic **Todo** model has `title` and `done` attributes.
-const TodoModel = Backbone.Model.extend({
+export default class TodoModel extends Backbone.Model {
 
   // Default attributes for the Todo item.
-  defaults: function() {
-    return {
-      title: "",
-      done: false
-    };
-  }
+  static defaults = {
+    done: false,
+    title: "",
+  };
 
-});
-
-export default TodoModel;
+}
