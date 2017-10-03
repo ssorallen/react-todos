@@ -23,7 +23,7 @@ export default class Body extends React.Component<Props> {
   };
 
   render() {
-    if (0 === this.props.collection.lkkength) {
+    if (0 === this.props.collection.length) {
       // Don't display the "Mark all as complete" button and the footer if there
       // are no **Todo** items.
       return null;
