@@ -23,6 +23,7 @@
   width: 20px;
   height: 20px;
   background: url(img/destroy.png) no-repeat;
+  text-indent: -9999px;
 }
 
 #todo-list li:hover .destroy {

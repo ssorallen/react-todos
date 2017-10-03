@@ -81,7 +81,9 @@ export default class TodoListItem extends React.Component<Props> {
             type="checkbox"
           />
           <label>{this.props.model.get("title")}</label>
-          <a className="destroy" onClick={this.destroy}></a>
+          <a className="destroy" onClick={this.destroy} title="Destroy">
+            Destroy
+          </a>
         </div>
         <input
           className="edit"
