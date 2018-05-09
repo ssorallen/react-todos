@@ -1,3 +1,7 @@
+:root {
+  --text-secondary: #777777;
+}
+
 html,
 body {
   margin: 0;
@@ -5,7 +9,7 @@ body {
 }
 
 body {
-  font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
   line-height: 1.4em;
   background: #eeeeee;
   color: #333333;
@@ -31,22 +35,18 @@ body {
 
 #instructions {
   margin: 10px auto;
-  color: #777777;
+  color: var(--text-secondary);
   text-shadow: rgba(255, 255, 255, 0.8) 0 1px 0;
   text-align: center;
 }
 
-#instructions a {
-  color: #336699;
-}
-
 #credits {
   margin: 30px auto;
-  color: #999;
+  color: var(--text-secondary);
   text-shadow: rgba(255, 255, 255, 0.8) 0 1px 0;
   text-align: center;
 }
 
 #credits a {
-  color: #888;
+  color: var(--text-secondary);
 }
