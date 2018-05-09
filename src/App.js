@@ -15,12 +15,11 @@ interface State {
 }
 
 class App extends React.Component<Props, State> {
-
   // Start the app with a blank `<input>`.
   constructor(props: Props) {
     super(props);
     this.state = {
-      title: "",
+      title: '',
     };
   }
 
@@ -31,12 +30,12 @@ class App extends React.Component<Props, State> {
 
   // Clear all done todo items, destroying their models.
   clearCompletedItems = () => {
-    _.invoke(this.props.collection.done(), "destroy");
+    _.invoke(this.props.collection.done(), 'destroy');
   };
 
   // Set the state of the title when the `<input>` is changed.
   handleTitleChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    this.setState({title: event.target.value});
+    this.setState({ title: event.target.value });
   };
 
   // If "Enter" is pressed in the main input field, it will submit the form.
@@ -44,15 +43,15 @@ class App extends React.Component<Props, State> {
   handleTitleFormSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if ("" === this.state.title) return;
+    if ('' === this.state.title) return;
 
-    this.props.collection.create({title: this.state.title});
-    this.setState({title: ""});
+    this.props.collection.create({ title: this.state.title });
+    this.setState({ title: '' });
   };
 
-  toggleAllItemsCompleted = (completed) => {
+  toggleAllItemsCompleted = completed => {
     this.props.collection.forEach(function(todo) {
-      todo.save({"done": completed});
+      todo.save({ done: completed });
     });
   };
 
@@ -74,17 +73,17 @@ class App extends React.Component<Props, State> {
         <Body
           clearCompletedItems={this.clearCompletedItems}
           collection={this.props.collection}
-          toggleAllItemsCompleted={this.toggleAllItemsCompleted} />
+          toggleAllItemsCompleted={this.toggleAllItemsCompleted}
+        />
       </div>
     );
   }
-
 }
 
 // Backbone/React Integration
 // --------------------------
 
-const mapModelsToProps = (models) => ({
+const mapModelsToProps = models => ({
   collection: models.todos,
 });
 

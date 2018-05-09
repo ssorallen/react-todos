@@ -17,7 +17,6 @@ interface State {
 
 // Renders a list of todos.
 export default class TodoList extends React.Component<Props, State> {
-
   constructor(props: Props) {
     super(props);
     // Start with no list item in edit mode.
@@ -30,12 +29,12 @@ export default class TodoList extends React.Component<Props, State> {
   // this callback. Setting the state triggers this component to re-render and
   // render that `TodoListItemComponent` in edit mode.
   setEditingModelId = (modelId: number | string) => {
-    this.setState({editingModelId: modelId});
+    this.setState({ editingModelId: modelId });
   };
 
   unsetEditingModelId = (modelId: number | string) => {
     if (modelId === this.state.editingModelId) {
-      this.setState({editingModelId: undefined});
+      this.setState({ editingModelId: undefined });
     }
   };
 
@@ -52,10 +51,10 @@ export default class TodoList extends React.Component<Props, State> {
             key={model.id}
             model={model}
             onStartEditing={this.setEditingModelId}
-            onStopEditing={this.unsetEditingModelId} />
+            onStopEditing={this.unsetEditingModelId}
+          />
         ))}
       </ul>
     );
   }
-
 }

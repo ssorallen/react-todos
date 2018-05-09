@@ -13,7 +13,6 @@ interface Props {
 
 // The footer shows the total number of todos and how many are completed.
 export default class Footer extends React.Component<Props> {
-
   render() {
     var clearCompletedButton;
 
@@ -23,7 +22,7 @@ export default class Footer extends React.Component<Props> {
       clearCompletedButton = (
         <a id="clear-completed" onClick={this.props.clearCompletedItems}>
           Clear {this.props.itemsDoneCount} completed
-          {1 === this.props.itemsDoneCount ? " item" : " items"}
+          {1 === this.props.itemsDoneCount ? ' item' : ' items'}
         </a>
       );
     }
@@ -35,10 +34,9 @@ export default class Footer extends React.Component<Props> {
         {clearCompletedButton}
         <div className="todo-count">
           <b>{this.props.itemsRemainingCount}</b>
-          {1 === this.props.itemsRemainingCount ? " item" : " items"} left
+          {1 === this.props.itemsRemainingCount ? ' item' : ' items'} left
         </div>
       </footer>
     );
   }
-
 }

@@ -15,7 +15,6 @@ interface Props {
 
 // The DOM for a todo item...
 export default class TodoListItem extends React.Component<Props> {
-
   _editInput: ?HTMLInputElement;
 
   // If the component updates and is in edit mode, send focus to the `<input>`.
@@ -41,7 +40,7 @@ export default class TodoListItem extends React.Component<Props> {
 
   // Set the title of this item's model when the value of the `<input>` changes.
   setTitle = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    this.props.model.set("title", event.target.value);
+    this.props.model.set('title', event.target.value);
   };
 
   // Tell the parent component this list item is entering edit mode.
@@ -55,7 +54,7 @@ export default class TodoListItem extends React.Component<Props> {
   };
 
   toggleDone = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    this.props.model.set("done", event.target.checked);
+    this.props.model.set('done', event.target.checked);
   };
 
   render() {
@@ -64,23 +63,23 @@ export default class TodoListItem extends React.Component<Props> {
 
     // Hide the `.view` when editing
     if (this.props.editing) {
-      viewStyles.display = "none";
+      viewStyles.display = 'none';
 
-    // ... and hide the `<input>` when not editing
+      // ... and hide the `<input>` when not editing
     } else {
-      inputStyles.display = "none";
+      inputStyles.display = 'none';
     }
 
     return (
-      <li className={this.props.model.get("done") ? "done" : ""}>
+      <li className={this.props.model.get('done') ? 'done' : ''}>
         <div className="view" onDoubleClick={this.startEditing} style={viewStyles}>
           <input
-            checked={this.props.model.get("done")}
+            checked={this.props.model.get('done')}
             className="toggle"
             onChange={this.toggleDone}
             type="checkbox"
           />
-          <label>{this.props.model.get("title")}</label>
+          <label>{this.props.model.get('title')}</label>
           <a className="destroy" onClick={this.destroy} title="Destroy">
             Destroy
           </a>
@@ -90,13 +89,14 @@ export default class TodoListItem extends React.Component<Props> {
           onBlur={this.stopEditing}
           onChange={this.setTitle}
           onKeyPress={this.handleEditKeyPress}
-          ref={ref => { this._editInput = ref; }}
+          ref={ref => {
+            this._editInput = ref;
+          }}
           style={inputStyles}
           type="text"
-          value={this.props.model.get("title")}
+          value={this.props.model.get('title')}
         />
       </li>
     );
   }
-
 }
