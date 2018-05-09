@@ -20,6 +20,7 @@ like jQuery.
 3. Run the local server
 
         $ yarn start
+4. See the running app at http://localhost:3000
 
 ### Favicon
 
