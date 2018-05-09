@@ -27,11 +27,11 @@
 }
 
 #todo-list li:hover .destroy {
-    display: block;
+  display: block;
 }
 
 #todo-list .destroy:hover {
-    background-position: 0 -20px;
+  background-position: 0 -20px;
 }
 
 #todo-list li.editing {
