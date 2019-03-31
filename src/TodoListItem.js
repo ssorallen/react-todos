@@ -1,102 +1,63 @@
 /* @flow */
+
 import './TodoListItem.css';
-import React from 'react';
-import TodoModel from './TodoModel';
+import * as React from 'react';
+import type { Todo } from './Types';
 
 // Todo List Item Component
 // ------------------------
 
-interface Props {
-  editing: boolean;
-  model: TodoModel;
-  onStartEditing: (modelId: number | string) => void;
-  onStopEditing: (modelId: number | string) => void;
-}
+type Props = {
+  editing: boolean,
+  onDestroy: () => void,
+  onSetTitle: (title: string) => void,
+  onStartEditing: () => void,
+  onStopEditing: () => void,
+  onToggleCompleted: (done: boolean) => void,
+  todo: Todo,
+};
 
-// The DOM for a todo item...
-export default class TodoListItem extends React.Component<Props> {
-  _editInput: ?HTMLInputElement;
+export default function TodoListItem(props: Props) {
+  const inputEl = React.createRef();
 
-  // If the component updates and is in edit mode, send focus to the `<input>`.
-  componentDidUpdate(prevProps: Props) {
-    if (this._editInput != null && this.props.editing && !prevProps.editing) {
-      this._editInput.focus();
+  function setTitleAndStopEditing() {
+    if (inputEl.current != null) props.onSetTitle(inputEl.current.value);
+    props.onStopEditing();
+  }
+
+  // // Stop editing if the input gets an "Enter" keypress.
+  function handleEditKeyPress(event: SyntheticKeyboardEvent<HTMLInputElement>) {
+    if (event.key === 'Enter') {
+      setTitleAndStopEditing();
     }
   }
 
-  // Destroying the model fires a `remove` event on the model's collection,
-  // which forces an update and removes this **TodoListItemComponent** from the
-  // DOM. We don't have to do any other cleanup!
-  destroy = () => {
-    this.props.model.destroy();
-  };
-
-  // Stop editing if the input gets an "Enter" keypress.
-  handleEditKeyPress = (event: SyntheticKeyboardEvent<HTMLInputElement>) => {
-    if (13 === event.keyCode) {
-      this.stopEditing();
-    }
-  };
-
-  // Set the title of this item's model when the value of the `<input>` changes.
-  setTitle = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    this.props.model.set('title', event.target.value);
-  };
-
-  // Tell the parent component this list item is entering edit mode.
-  startEditing = () => {
-    this.props.onStartEditing(this.props.model.id);
-  };
-
-  // Exit edit mode.
-  stopEditing = () => {
-    this.props.onStopEditing(this.props.model.id);
-  };
-
-  toggleDone = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    this.props.model.set('done', event.target.checked);
-  };
-
-  render() {
-    var inputStyles = {};
-    var viewStyles = {};
-
-    // Hide the `.view` when editing
-    if (this.props.editing) {
-      viewStyles.display = 'none';
-
-      // ... and hide the `<input>` when not editing
-    } else {
-      inputStyles.display = 'none';
-    }
-
-    return (
-      <li className={this.props.model.get('done') ? 'done' : ''}>
-        <div className="view" onDoubleClick={this.startEditing} style={viewStyles}>
+  return (
+    <li className={props.todo.done ? 'done' : null}>
+      {props.editing ? (
+        <input
+          autoFocus
+          className="edit"
+          defaultValue={props.todo.title}
+          onBlur={setTitleAndStopEditing}
+          onKeyPress={handleEditKeyPress}
+          ref={inputEl}
+          type="text"
+        />
+      ) : (
+        <div className="view" onDoubleClick={props.onStartEditing}>
           <input
-            checked={this.props.model.get('done')}
+            checked={props.todo.done}
             className="toggle"
-            onChange={this.toggleDone}
+            onChange={props.onToggleCompleted}
             type="checkbox"
           />
-          <label>{this.props.model.get('title')}</label>
-          <a className="destroy" onClick={this.destroy} title="Destroy">
+          <label>{props.todo.title}</label>
+          <a className="destroy" onClick={props.onDestroy} title="Destroy">
             Destroy
           </a>
         </div>
-        <input
-          className="edit"
-          onBlur={this.stopEditing}
-          onChange={this.setTitle}
-          onKeyPress={this.handleEditKeyPress}
-          ref={ref => {
-            this._editInput = ref;
-          }}
-          style={inputStyles}
-          type="text"
-          value={this.props.model.get('title')}
-        />
-      </li>
-    );
-  }
+      )}
+    </li>
+  );
 }

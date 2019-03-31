@@ -1,49 +1,56 @@
 /* @flow */
+
 import './Body.css';
+import * as React from 'react';
 import Footer from './Footer';
-import React from 'react';
-import TodoCollection from './TodoCollection';
+import type { Todo } from './Types';
 import TodoList from './TodoList';
 
 // Main Component
 // --------------
 
 interface Props {
-  clearCompletedItems: () => void;
-  collection: TodoCollection;
-  toggleAllItemsCompleted: (toggle: boolean) => void;
+  onClearCompletedTodos: () => void;
+  onDestroyTodo: (Todo: Todo) => void;
+  onSetTodoTitle: (Todo: Todo, title: string) => void;
+  onToggleTodoCompleted: (Todo: Todo, done: boolean) => void;
+  onToggleAllTodosCompleted: (toggle: boolean) => void;
+  todos: Array<Todo>;
 }
 
 // The main component contains the list of todos and the footer.
-export default class Body extends React.Component<Props> {
+export default function Body(props: Props) {
   // Tell the **App** to toggle the *done* state of all **Todo** items.
-  toggleAllItemsCompleted = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    this.props.toggleAllItemsCompleted(event.target.checked);
+  const toggleAllTodosCompleted = (event: SyntheticInputEvent<HTMLInputElement>) => {
+    props.onToggleAllTodosCompleted(event.target.checked);
   };
 
-  render() {
-    if (0 === this.props.collection.length) {
-      // Don't display the "Mark all as complete" button and the footer if there
-      // are no **Todo** items.
-      return null;
-    } else {
-      return (
-        <section id="main">
-          <input
-            id="toggle-all"
-            type="checkbox"
-            checked={0 === this.props.collection.remaining().length}
-            onChange={this.toggleAllItemsCompleted}
-          />
-          <label htmlFor="toggle-all">Mark all as complete</label>
-          <TodoList collection={this.props.collection} />
-          <Footer
-            clearCompletedItems={this.props.clearCompletedItems}
-            itemsRemainingCount={this.props.collection.remaining().length}
-            itemsDoneCount={this.props.collection.done().length}
-          />
-        </section>
-      );
-    }
-  }
+  return (
+    <section id="main">
+      <input
+        id="toggle-all"
+        type="checkbox"
+        checked={props.todos.every(t => t.done)}
+        onChange={toggleAllTodosCompleted}
+      />
+      <label htmlFor="toggle-all">Mark all as complete</label>
+      <TodoList
+        onDestroyTodo={props.onDestroyTodo}
+        onSetTodoTitle={props.onSetTodoTitle}
+        onToggleTodoCompleted={props.onToggleTodoCompleted}
+        todos={props.todos}
+      />
+      <Footer
+        clearCompletedItems={props.onClearCompletedTodos}
+        itemsRemainingCount={props.todos.reduce((count, t) => {
+          if (!t.done) count += 1;
+          return count;
+        }, 0)}
+        itemsDoneCount={props.todos.reduce((count, t) => {
+          if (t.done) count += 1;
+          return count;
+        }, 0)}
+      />
+    </section>
+  );
 }

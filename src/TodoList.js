@@ -1,60 +1,49 @@
 /* @flow */
+
 import './TodoList.css';
-import React from 'react';
-import TodoCollection from './TodoCollection';
+import * as React from 'react';
+import type { Todo } from './Types';
 import TodoListItem from './TodoListItem';
 
 // Todo List Component
 // -------------------
 
-interface Props {
-  collection: TodoCollection;
-}
+type Props = {
+  onDestroyTodo: (Todo: Todo) => void,
+  onSetTodoTitle: (Todo: Todo, title: string) => void,
+  onToggleTodoCompleted: (Todo: Todo, done: boolean) => void,
+  todos: Array<Todo>,
+};
 
-interface State {
-  editingModelId: ?(number | string);
-}
+export default function TodoList(props: Props) {
+  const [editingTodo, setEditingTodo] = React.useState(null);
 
-// Renders a list of todos.
-export default class TodoList extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    // Start with no list item in edit mode.
-    this.state = {
-      editingModelId: undefined,
-    };
-  }
-
-  // When a `TodoListItemComponent` starts editing, it passes its model's ID to
-  // this callback. Setting the state triggers this component to re-render and
-  // render that `TodoListItemComponent` in edit mode.
-  setEditingModelId = (modelId: number | string) => {
-    this.setState({ editingModelId: modelId });
-  };
-
-  unsetEditingModelId = (modelId: number | string) => {
-    if (modelId === this.state.editingModelId) {
-      this.setState({ editingModelId: undefined });
-    }
-  };
-
-  render() {
-    return (
-      <ul id="todo-list">
-        {this.props.collection.map(model => (
-          // Pass the `key` attribute[1] a unique ID so React can track the
-          // elements properly.
-          //
-          // [1] http://facebook.github.io/react/docs/multiple-components.html#dynamic-children
-          <TodoListItem
-            editing={this.state.editingModelId === model.id}
-            key={model.id}
-            model={model}
-            onStartEditing={this.setEditingModelId}
-            onStopEditing={this.unsetEditingModelId}
-          />
-        ))}
-      </ul>
-    );
-  }
+  return (
+    <ul id="todo-list">
+      {props.todos.map((todo, index) => (
+        <TodoListItem
+          editing={editingTodo === todo}
+          key={index}
+          onDestroy={() => {
+            props.onDestroyTodo(todo);
+          }}
+          onSetTitle={title => {
+            props.onSetTodoTitle(todo, title);
+          }}
+          onStartEditing={() => {
+            setEditingTodo(todo);
+          }}
+          onStopEditing={() => {
+            if (todo === editingTodo) {
+              setEditingTodo(null);
+            }
+          }}
+          onToggleCompleted={() => {
+            props.onToggleTodoCompleted(todo, !todo.done);
+          }}
+          todo={todo}
+        />
+      ))}
+    </ul>
+  );
 }
